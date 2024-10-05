@@ -1,3 +1,6 @@
+Team: Anna Rechkalova, Yelyzaveta Tretiak, Dmytro Shvets (group 4)
+
+IMDB dataset:
 1. What is the most popular genre for each country?
 2. Which directors have the most projects in different countries?
 3. Which countries have the most movie premieres in a given year?
