@@ -1,10 +1,4 @@
-from pyspark import SparkConf
-from pyspark.sql import SparkSession
-import pyspark.sql.types as t
+from basic_dfs.basic_df_Rechkalova import basic_test_df
 
-spark_session = (SparkSession.builder
-                 .master("local")
-                 .appName("test app")
-                 .config(conf=SparkConf())
-                 .getOrCreate())
-
+df = basic_test_df()
+df.show()
