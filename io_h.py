@@ -18,5 +18,5 @@ def read_title_akas_df(path_to_df):
                                       t.StructField('isOriginalTitle', t.IntegerType(), False),])
 
     spark = spark_session.getActiveSession()
-    from_tsv_default_df = spark.read.csv(path_to_df, sep=r"\t", header=True, schema=title_akas_schema)
+    from_tsv_default_df = spark.read.csv(path_to_df, sep=r"\t", header=True, nullValue='null', schema=title_akas_schema)
     return from_tsv_default_df
