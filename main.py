@@ -14,4 +14,4 @@ df1 = basic_test_df1()
 df1.show()
 
 df1_name_basics = read_name_basics_df(path)
-# df1_name_basics.show()
+# df1_name_basics.show(truncate=False)  # remove before commit
