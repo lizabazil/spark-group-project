@@ -1,6 +1,8 @@
+import os
+
 from spark_session import spark_session
 import pyspark.sql.types as t
-from setting import path_write
+from setting import write_path
 
 
 def read_title_akas_df(path_to_df):
@@ -23,10 +25,11 @@ def read_title_akas_df(path_to_df):
     return from_tsv_default_df
 
 
-def write_title_akas_df_to_csv(df, path=path_write):
+def write_title_akas_df_to_csv(df, path=write_path):
     """
     Write dataframe title.akas.tsv
     :param df:
     :param path:
     :return:
     """
+    df.write.csv(path, header=True, mode="overwrite")
