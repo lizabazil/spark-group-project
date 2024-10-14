@@ -1,5 +1,6 @@
 from spark_session import spark_session
 import pyspark.sql.types as t
+from setting import write_path
 
 
 def read_title_principals_df(path_to_df):
@@ -22,3 +23,11 @@ def read_title_principals_df(path_to_df):
     return df
 
 
+def write_title_principals_df_to_csv(df, path=write_path):
+    """
+    Write title_principals dataframe to csv file
+    :param df:
+    :param path:
+    :return: None
+    """
+    df.write.csv(path, header=True, mode="overwrite")
