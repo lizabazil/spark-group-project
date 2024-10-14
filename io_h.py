@@ -23,10 +23,11 @@ def read_name_basics_df(path_to_df):
 
 def write_name_basics_to_csv(df_name_basics, write_path_to_df=write_path):
     """
-
+    Writes the dataframe to csv file.
     :param df_name_basics:
     :param write_path_to_df:
-    :return:
+    :return: None
     """
-    df_name_basics.write.csv(write_path_to_df, header=True)
+    df_name_basics.write.csv(write_path_to_df, mode='overwrite', header=True)
+    return None
 
