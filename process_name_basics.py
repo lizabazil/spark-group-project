@@ -1,5 +1,5 @@
 import re
-from pyspark.sql.functions import split
+import pyspark.sql.functions as f
 
 
 def change_column_names_to_snake_case(name_basics_df):
@@ -45,7 +45,7 @@ def make_primary_profession_col_array_type(name_basics_df):
     """
     primary_profession_col_name = 'primary_profession'
     name_basics_df = name_basics_df.withColumn(primary_profession_col_name,
-                                               split(name_basics_df[primary_profession_col_name], ','))
+                                               f.split(name_basics_df[primary_profession_col_name], ','))
     return name_basics_df
 
 
@@ -61,8 +61,23 @@ def make_known_for_titles_col_array_type(name_basics_df):
     """
     known_for_titles_col_name = 'known_for_titles'
     name_basics_df = name_basics_df.withColumn(known_for_titles_col_name,
-                                               split(name_basics_df[known_for_titles_col_name], ','))
+                                               f.split(name_basics_df[known_for_titles_col_name], ','))
     return name_basics_df
 
 
+def create_age_col(name_basics_df):
+    """
+    To create new column with age of person.
 
+    Args:
+         name_basics_df (pyspark dataframe): The name_basics dataframe.
+
+    Returns:
+        pyspark dataframe: dataframe with the added column 'age' base on birth_year and death_year.
+    """
+    birth_year_col_name = 'birth_year'
+    death_year_col_name = 'death_year'
+    name_basics_df = name_basics_df.withColumn('age', f.when(f.col(death_year_col_name).isNull(), f.year(f.current_date()) -
+                                                             f.col(birth_year_col_name))
+                                               .otherwise(f.col(death_year_col_name) - f.col(birth_year_col_name)))
+    return name_basics_df
