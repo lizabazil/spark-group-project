@@ -73,11 +73,28 @@ def create_age_col(name_basics_df):
          name_basics_df (pyspark dataframe): The name_basics dataframe.
 
     Returns:
-        pyspark dataframe: dataframe with the added column 'age' base on birth_year and death_year.
+        pyspark dataframe: dataframe with the added column 'age' based on birth_year and death_year.
     """
     birth_year_col_name = 'birth_year'
     death_year_col_name = 'death_year'
-    name_basics_df = name_basics_df.withColumn('age', f.when(f.col(death_year_col_name).isNull(), f.year(f.current_date()) -
-                                                             f.col(birth_year_col_name))
+    name_basics_df = name_basics_df.withColumn('age',
+                                               f.when(f.col(death_year_col_name).isNull(), f.year(f.current_date()) -
+                                                      f.col(birth_year_col_name))
                                                .otherwise(f.col(death_year_col_name) - f.col(birth_year_col_name)))
+    return name_basics_df
+
+
+def create_is_alive_col(name_basics_df):
+    """
+    To create new column with boolean value if person is alive.
+
+    Args:
+         name_basics_df (pyspark dataframe): The name_basics dataframe.
+
+    Returns:
+        pyspark dataframe: dataframe with the added column 'is_alive'.
+    """
+    death_year_col_name = 'death_year'
+    name_basics_df = name_basics_df.withColumn('is_alive', f.when(f.col(death_year_col_name).isNull(), f.lit(True))
+                                               .otherwise(f.lit(False)))
     return name_basics_df
