@@ -1,6 +1,14 @@
 import re
 import pyspark.sql.functions as f
 
+# constants for column names
+nconst = 'nconst'
+primary_name= 'primary_name'
+primary_profession = 'primary_profession'
+known_for_titles = 'known_for_titles'
+birth_year = 'birth_year'
+death_year = 'death_year'
+
 
 def change_column_names_to_snake_case(name_basics_df):
     """
@@ -43,9 +51,8 @@ def make_primary_profession_col_array_type(name_basics_df):
     Returns:
         pyspark dataframe: dataframe with the modified column type 'primary_profession'.
     """
-    primary_profession_col_name = 'primary_profession'
-    name_basics_df = name_basics_df.withColumn(primary_profession_col_name,
-                                               f.split(name_basics_df[primary_profession_col_name], ','))
+    name_basics_df = name_basics_df.withColumn(primary_profession,
+                                               f.split(name_basics_df[primary_profession], ','))
     return name_basics_df
 
 
@@ -59,9 +66,8 @@ def make_known_for_titles_col_array_type(name_basics_df):
     Returns:
         pyspark dataframe: dataframe with the modified column type 'known_for_titles'.
     """
-    known_for_titles_col_name = 'known_for_titles'
-    name_basics_df = name_basics_df.withColumn(known_for_titles_col_name,
-                                               f.split(name_basics_df[known_for_titles_col_name], ','))
+    name_basics_df = name_basics_df.withColumn(known_for_titles,
+                                               f.split(name_basics_df[known_for_titles], ','))
     return name_basics_df
 
 
@@ -75,12 +81,10 @@ def create_age_col(name_basics_df):
     Returns:
         pyspark dataframe: dataframe with the added column 'age' based on birth_year and death_year.
     """
-    birth_year_col_name = 'birth_year'
-    death_year_col_name = 'death_year'
     name_basics_df = name_basics_df.withColumn('age',
-                                               f.when(f.col(death_year_col_name).isNull(), f.year(f.current_date()) -
-                                                      f.col(birth_year_col_name))
-                                               .otherwise(f.col(death_year_col_name) - f.col(birth_year_col_name)))
+                                               f.when(f.col(death_year).isNull(), f.year(f.current_date()) -
+                                                      f.col(birth_year))
+                                               .otherwise(f.col(death_year) - f.col(birth_year)))
     return name_basics_df
 
 
@@ -94,7 +98,6 @@ def create_is_alive_col(name_basics_df):
     Returns:
         pyspark dataframe: dataframe with the added column 'is_alive'.
     """
-    death_year_col_name = 'death_year'
-    name_basics_df = name_basics_df.withColumn('is_alive', f.when(f.col(death_year_col_name).isNull(), f.lit(True))
+    name_basics_df = name_basics_df.withColumn('is_alive', f.when(f.col(death_year).isNull(), f.lit(True))
                                                .otherwise(f.lit(False)))
     return name_basics_df
