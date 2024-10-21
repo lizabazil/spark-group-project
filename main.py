@@ -7,7 +7,7 @@ from setting import path
 from process.process_name_basics import (make_primary_profession_col_array_type,
                                          make_known_for_titles_col_array_type, create_age_col, create_is_alive_col,
                                          rename_nconst_col)
-from process.common_functions import change_column_names_to_snake_case
+from process.common_functions import change_column_names_to_snake_case, null_from_string_to_none
 
 
 df2 = basic_test_df2()
@@ -37,7 +37,9 @@ renamed_col_nconst_df = rename_nconst_col(with_is_living_col_df)
 write_name_basics_to_csv(renamed_col_nconst_df)
 
 df_title_akas = read_title_akas_df(path)
-write_title_akas_df_to_csv(df_title_akas)
+df_title_akas_without_n = null_from_string_to_none(df_title_akas)
+# df_title_akas_without_n.show()
+write_title_akas_df_to_csv(df_title_akas_without_n)
 
 df3_title_principals = read_title_principals_df(path)
 write_title_principals_df_to_csv(df3_title_principals)

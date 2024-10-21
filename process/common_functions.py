@@ -1,4 +1,5 @@
 import re
+import pyspark.sql.functions as f
 
 
 def change_column_names_to_snake_case(df):
@@ -30,3 +31,9 @@ def to_snake_case(name_column):
     """
     new_column_name = re.sub(r'(?<!^)(?=[A-Z])', '_', name_column)
     return new_column_name.lower()
+
+
+def null_from_string_to_none(df):
+    for col in df.columns:
+        df = df.withColumn(col, f.when(f.col(col).isin(r'\N'), None).otherwise(f.col(col)))
+    return df
