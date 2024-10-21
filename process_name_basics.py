@@ -1,14 +1,6 @@
 import re
 import pyspark.sql.functions as f
-
-# constants for column names
-nconst = 'nconst'
-id_col_name = 'id'
-primary_name = 'primary_name'
-primary_profession = 'primary_profession'
-known_for_titles = 'known_for_titles'
-birth_year = 'birth_year'
-death_year = 'death_year'
+from columns import *
 
 
 def change_column_names_to_snake_case(name_basics_df):
@@ -99,20 +91,20 @@ def create_is_alive_col(name_basics_df):
     Returns:
         pyspark dataframe: dataframe with the added column 'is_alive'.
     """
-    name_basics_df = name_basics_df.withColumn('is_alive', f.when(f.col(death_year).isNull(), f.lit(True))
+    name_basics_df = name_basics_df.withColumn(is_alive, f.when(f.col(death_year).isNull(), f.lit(True))
                                                .otherwise(f.lit(False)))
     return name_basics_df
 
 
 def rename_nconst_col(name_basics_df):
     """
-    Rename column 'nconst' to 'id'.
+    Rename column 'nconst' to 'id_person'.
 
     Args:
         name_basics_df (pyspark dataframe): The name_basics dataframe.
 
     Returns:
-        pyspark dataframe: dataframe with the modified column name 'id'.
+        pyspark dataframe: dataframe with the modified column name 'id_person'.
     """
-    name_basics_df = name_basics_df.withColumnRenamed(nconst, id_col_name)
+    name_basics_df = name_basics_df.withColumnRenamed(nconst, id_person)
     return name_basics_df
