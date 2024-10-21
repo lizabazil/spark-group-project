@@ -91,3 +91,30 @@ def write_title_principals_df_to_csv(df, path=write_path):
     """
     df.write.csv(path, header=True, mode="overwrite")
 
+
+def read_title_episode_df(path_to_df):
+    """
+    Read title.episode.tsv file and return
+    :param path_to_df:
+    :return: dataframe
+    """
+    title_episode_schema = t.StructType([t.StructField('tconst', t.StringType(), False),
+                                      t.StructField('parentTconst', t.StringType(), False),
+                                      t.StructField('seasonNumber', t.IntegerType(), True),
+                                      t.StructField('episodeNumber', t.IntegerType(), True),])
+
+    spark = spark_session.getActiveSession()
+    from_tsv_default_df = spark.read.csv(path_to_df, sep=r"\t", header=True, nullValue='null',
+                                         schema=title_episode_schema)
+    return from_tsv_default_df
+
+
+def write_title_episode_df_to_csv(df, path=write_path):
+    """
+    Write dataframe title.episode.tsv
+    :param df:
+    :param path:
+    :return:
+    """
+    df.write.csv(path, header=True, mode="overwrite")
+
