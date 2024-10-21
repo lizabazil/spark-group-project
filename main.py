@@ -51,5 +51,6 @@ write_title_episode_df_to_csv(df_title_episode_without_n)
 
 title_principals_df = read_title_principals_df(path)
 snake_case_title_principals_df = change_column_names_to_snake_case(title_principals_df)
+title_principals_df_with_nulls = null_from_string_to_none(snake_case_title_principals_df)
 
 write_title_principals_df_to_csv(title_principals_df)
