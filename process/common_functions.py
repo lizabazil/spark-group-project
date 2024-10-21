@@ -34,6 +34,16 @@ def to_snake_case(name_column):
 
 
 def null_from_string_to_none(df):
+    """
+    To change all \N (strings) to None values.
+
+    Args:
+        df (dataframe): The dataframe.
+
+    Returns:
+        Dataframe with correctly defined null values.
+
+    """
     for col in df.columns:
         df = df.withColumn(col, f.when(f.col(col).isin(r'\N'), None).otherwise(f.col(col)))
     return df
