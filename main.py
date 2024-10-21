@@ -4,9 +4,10 @@ from basic_dfs.basic_df_Tretiak import basic_test_df as basic_test_df1
 from io_h import read_name_basics_df, write_name_basics_to_csv
 from io_h import read_title_principals_df, write_title_principals_df_to_csv, read_title_akas_df, write_title_akas_df_to_csv
 from setting import path
-from process_name_basics import (change_column_names_to_snake_case, make_primary_profession_col_array_type,
-                                 make_known_for_titles_col_array_type, create_age_col, create_is_alive_col,
-                                 rename_nconst_col)
+from process.process_name_basics import (make_primary_profession_col_array_type,
+                                         make_known_for_titles_col_array_type, create_age_col, create_is_alive_col,
+                                         rename_nconst_col)
+from process.common_functions import change_column_names_to_snake_case
 
 
 df2 = basic_test_df2()

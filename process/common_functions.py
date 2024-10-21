@@ -1,0 +1,32 @@
+import re
+
+
+def change_column_names_to_snake_case(df):
+    """
+    To change the column names to snake_case style.
+
+    Args:
+        df (dataframe): The dataframe.
+
+    Returns:
+        dataframe with the new changed column names.
+
+    """
+    new_columns_names = [to_snake_case(col) for col in df.columns]
+    for idx, old_col in enumerate(df.columns):
+        df = df.withColumnRenamed(old_col, new_columns_names[idx])
+    return df
+
+
+def to_snake_case(name_column):
+    """
+    To modify column name style to snake_case style.
+
+    Args:
+        name_column (string): The column name.
+
+    Returns:
+        string: The modified column name.
+    """
+    new_column_name = re.sub(r'(?<!^)(?=[A-Z])', '_', name_column)
+    return new_column_name.lower()
