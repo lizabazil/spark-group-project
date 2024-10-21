@@ -49,5 +49,7 @@ df_title_episode_without_n = null_from_string_to_none(df_snake_case_episode)
 # df_title_episode_without_n.show()
 write_title_episode_df_to_csv(df_title_episode_without_n)
 
-df3_title_principals = read_title_principals_df(path)
-write_title_principals_df_to_csv(df3_title_principals)
+title_principals_df = read_title_principals_df(path)
+snake_case_title_principals_df = change_column_names_to_snake_case(title_principals_df)
+
+write_title_principals_df_to_csv(title_principals_df)
