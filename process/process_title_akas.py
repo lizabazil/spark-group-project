@@ -1,4 +1,4 @@
-from columns import types, attributes
+from columns import types, attributes, is_original_title
 import pyspark.sql.functions as f
 
 
@@ -37,3 +37,21 @@ def make_attribute_col_array_type(title_akas_df):
     title_akas_df = title_akas_df.withColumn(attributes,
                                              f.split(title_akas_df[attributes], ','))
     return title_akas_df
+
+
+def make_is_original_title_col_boolean_type(title_akas_df):
+    """
+    Change string column "is_original_title" to boolean type.
+    from developer.imdb.com:
+        "isOriginalTitle (boolean) – 0: not original title; 1: original title"
+
+    Args:
+        title_akas_df (dataframe): The dataframe.
+
+    Returns:
+        dataframe: The dataframe with boolean values.
+    """
+    title_akas_df = title_akas_df.withColumn('is_original_title', f.col('is_original_title').
+                                             cast('int').cast('boolean'))
+    return title_akas_df
+

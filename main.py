@@ -9,7 +9,8 @@ from process.process_name_basics import (make_primary_profession_col_array_type,
                                          make_known_for_titles_col_array_type, create_age_col, create_is_alive_col,
                                          rename_nconst_col)
 from process.common_functions import change_column_names_to_snake_case, null_from_string_to_none
-from process.process_title_akas import make_types_col_array_type, make_attribute_col_array_type
+from process.process_title_akas import (make_types_col_array_type, make_attribute_col_array_type,
+                                        make_is_original_title_col_boolean_type)
 
 
 # df2 = basic_test_df2()
@@ -43,8 +44,9 @@ df_snake_case_akas = change_column_names_to_snake_case(df_title_akas)
 df_title_akas_without_n = null_from_string_to_none(df_snake_case_akas)
 df_title_akas_types_array = make_types_col_array_type(df_title_akas_without_n)
 df_title_akas_attributes_array = make_attribute_col_array_type(df_title_akas_types_array)
-# df_title_akas_attributes_array.show()
-write_title_akas_df_to_csv(df_title_akas_without_n)
+df_title_akas_is_original_title_boolean = make_is_original_title_col_boolean_type(df_title_akas_attributes_array)
+# df_title_akas_is_original_title_boolean.show()
+write_title_akas_df_to_csv(df_title_akas_is_original_title_boolean)
 
 # df_episode = read_title_episode_df(path)
 # df_snake_case_episode = change_column_names_to_snake_case(df_episode)
