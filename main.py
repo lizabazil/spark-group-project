@@ -64,4 +64,5 @@ title_crew_df_with_writers_as_array = convert_writers_col_to_array(title_crew_df
 write_title_crew_df_to_csv(title_crew_df_with_writers_as_array)
 
 title_ratings_df = read_title_ratings_df(path)
-write_title_ratings_df_to_csv(title_ratings_df)
+snake_case_title_ratings_df = change_column_names_to_snake_case(title_ratings_df)
+write_title_ratings_df_to_csv(snake_case_title_ratings_df)
