@@ -1,7 +1,8 @@
 from basic_dfs.basic_df_Rechkalova import basic_test_df as basic_test_df2
 from basic_dfs.basic_df_Shvets import basic_test_df as basic_test_df3
 from basic_dfs.basic_df_Tretiak import basic_test_df as basic_test_df1
-from io_h import read_name_basics_df, write_name_basics_to_csv, read_title_crew_df, write_title_crew_df_to_csv
+from io_h import read_name_basics_df, write_name_basics_to_csv, read_title_crew_df, write_title_crew_df_to_csv, \
+    read_title_ratings_df, write_title_ratings_df_to_csv
 from io_h import (read_title_principals_df, write_title_principals_df_to_csv, read_title_akas_df,
                   write_title_akas_df_to_csv, read_title_episode_df, write_title_episode_df_to_csv)
 from process.process_title_crew import convert_directors_col_to_array, convert_writers_col_to_array
@@ -61,3 +62,6 @@ title_crew_df_with_nulls = null_from_string_to_none(snake_case_title_crew_df)
 title_crew_df_with_directors_as_array = convert_directors_col_to_array(title_crew_df_with_nulls)
 title_crew_df_with_writers_as_array = convert_writers_col_to_array(title_crew_df_with_directors_as_array)
 write_title_crew_df_to_csv(title_crew_df_with_writers_as_array)
+
+title_ratings_df = read_title_ratings_df(path)
+write_title_ratings_df_to_csv(title_ratings_df)

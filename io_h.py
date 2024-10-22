@@ -141,3 +141,28 @@ def write_title_crew_df_to_csv(df, path=write_path):
     :return:
     """
     df.write.csv(path, header=True, mode="overwrite")
+
+
+def read_title_ratings_df(path_to_df):
+    """
+    Read dataset title_ratings
+    :param path_to_df:
+    :return: dataframe
+    """
+    spark = spark_session.getActiveSession()
+    title_ratings_schema = t.StructType([t.StructField('tconst', t.StringType(), False),
+                                         t.StructField('averageRating', t.DoubleType(), False),
+                                         t.StructField('numVotes', t.IntegerType(), False)])
+
+    df = spark.read.csv(path_to_df, sep=r'\t', header=True, nullValue='null', schema=title_ratings_schema)
+    return df
+
+
+def write_title_ratings_df_to_csv(df, path=write_path):
+    """
+    Write title_ratings dataframe to csv file
+    :param df:
+    :param path:
+    :return:
+    """
+    df.write.csv(path, header=True, mode="overwrite")
