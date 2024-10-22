@@ -8,3 +8,5 @@ primary_profession = 'primary_profession'
 known_for_titles = 'known_for_titles'
 age = 'age'
 is_alive = 'is_alive'
+# title.crew
+directors = 'directors'
