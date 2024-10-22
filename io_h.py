@@ -1,6 +1,5 @@
 from spark_session import spark_session
 import pyspark.sql.types as t
-from setting import write_path
 
 
 def read_name_basics_df(path_to_df):
