@@ -52,7 +52,7 @@ null_from_string_to_none_df = null_from_string_to_none(convert_is_adult_col_to_b
 # write to the file
 write_name_basics_to_csv(null_from_string_to_none_df, title_basics_write_path)
 
-df_title_akas = read_title_akas_df(path)
+df_title_akas = read_title_akas_df(title_akas_path)
 df_snake_case_akas = change_column_names_to_snake_case(df_title_akas)
 df_title_akas_without_n = null_from_string_to_none(df_snake_case_akas)
 df_title_akas_types_array = make_types_col_array_type(df_title_akas_without_n)
@@ -61,24 +61,24 @@ df_title_akas_is_original_title_boolean = make_is_original_title_col_boolean_typ
 # df_title_akas_is_original_title_boolean.show()
 write_title_akas_df_to_csv(df_title_akas_is_original_title_boolean)
 
-df_episode = read_title_episode_df(path)
+df_episode = read_title_episode_df(title_episode_path)
 df_snake_case_episode = change_column_names_to_snake_case(df_episode)
 df_title_episode_without_n = null_from_string_to_none(df_snake_case_episode)
 # df_title_episode_without_n.show()
 write_title_episode_df_to_csv(df_title_episode_without_n)
 
-title_principals_df = read_title_principals_df(path)
+title_principals_df = read_title_principals_df(title_principals_path)
 snake_case_title_principals_df = change_column_names_to_snake_case(title_principals_df)
 title_principals_df_with_nulls = null_from_string_to_none(snake_case_title_principals_df)
 write_title_principals_df_to_csv(title_principals_df_with_nulls)
 
-title_crew_df = read_title_crew_df(path)
+title_crew_df = read_title_crew_df(title_crew_path)
 snake_case_title_crew_df = change_column_names_to_snake_case(title_crew_df)
 title_crew_df_with_nulls = null_from_string_to_none(snake_case_title_crew_df)
 title_crew_df_with_directors_as_array = convert_directors_col_to_array(title_crew_df_with_nulls)
 title_crew_df_with_writers_as_array = convert_writers_col_to_array(title_crew_df_with_directors_as_array)
 write_title_crew_df_to_csv(title_crew_df_with_writers_as_array)
 
-title_ratings_df = read_title_ratings_df(path)
+title_ratings_df = read_title_ratings_df(title_ratings_path)
 snake_case_title_ratings_df = change_column_names_to_snake_case(title_ratings_df)
 write_title_ratings_df_to_csv(snake_case_title_ratings_df)
