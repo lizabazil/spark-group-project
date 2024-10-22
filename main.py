@@ -1,7 +1,7 @@
 from basic_dfs.basic_df_Rechkalova import basic_test_df as basic_test_df2
 from basic_dfs.basic_df_Shvets import basic_test_df as basic_test_df3
 from basic_dfs.basic_df_Tretiak import basic_test_df as basic_test_df1
-from io_h import read_name_basics_df, write_name_basics_to_csv
+from io_h import read_name_basics_df, write_name_basics_to_csv, read_title_crew_df, write_title_crew_df_to_csv
 from io_h import (read_title_principals_df, write_title_principals_df_to_csv, read_title_akas_df,
                   write_title_akas_df_to_csv, read_title_episode_df, write_title_episode_df_to_csv)
 from setting import path
@@ -52,5 +52,7 @@ write_title_episode_df_to_csv(df_title_episode_without_n)
 title_principals_df = read_title_principals_df(path)
 snake_case_title_principals_df = change_column_names_to_snake_case(title_principals_df)
 title_principals_df_with_nulls = null_from_string_to_none(snake_case_title_principals_df)
-
 write_title_principals_df_to_csv(title_principals_df)
+
+title_crew_df = read_title_crew_df(path)
+write_title_crew_df_to_csv(title_crew_df)

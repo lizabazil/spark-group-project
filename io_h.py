@@ -118,3 +118,26 @@ def write_title_episode_df_to_csv(df, path=write_path):
     """
     df.write.csv(path, header=True, mode="overwrite")
 
+
+def read_title_crew_df(path_to_df):
+    """
+    Read dataset title_crew
+    :param path_to_df:
+    :return: dataframe
+    """
+    spark = spark_session.getActiveSession()
+    title_crew_schema = t.StructType([t.StructField('tconst', t.StringType(), False),
+                                      t.StructField('directors', t.StringType(), True),
+                                      t.StructField('writers', t.StringType(), True)])
+    df = spark.read.csv(path_to_df, sep=r'\t', header=True, nullValue='null', schema=title_crew_schema)
+    return df
+
+
+def write_title_crew_df_to_csv(df, path=write_path):
+    """
+    Write title_crew dataframe to csv file
+    :param df:
+    :param path:
+    :return:
+    """
+    df.write.csv(path, header=True, mode="overwrite")
