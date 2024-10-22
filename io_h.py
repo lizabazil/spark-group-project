@@ -2,6 +2,17 @@ from spark_session import spark_session
 import pyspark.sql.types as t
 
 
+def write_dataframe_to_csv(df, write_path_to_df):
+    """
+    Writes the dataframe to csv file.
+    :param df:
+    :param write_path_to_df:
+    :return: None
+    """
+    df.write.csv(write_path_to_df, mode='overwrite', header=True)
+    return None
+
+
 def read_name_basics_df(path_to_df):
     """
     Read dataset name_basics
@@ -18,17 +29,6 @@ def read_name_basics_df(path_to_df):
 
     df = spark.read.csv(path_to_df, sep=r'\t', header=True, nullValue='null', schema=name_basics_schema)
     return df
-
-
-def write_name_basics_to_csv(df_name_basics, write_path_to_df=write_path):
-    """
-    Writes the dataframe to csv file.
-    :param df_name_basics:
-    :param write_path_to_df:
-    :return: None
-    """
-    df_name_basics.write.csv(write_path_to_df, mode='overwrite', header=True)
-    return None
 
 
 def read_title_akas_df(path_to_df):
@@ -51,16 +51,6 @@ def read_title_akas_df(path_to_df):
     return from_tsv_default_df
 
 
-def write_title_akas_df_to_csv(df, path=write_path):
-    """
-    Write dataframe title.akas.tsv
-    :param df:
-    :param path:
-    :return:
-    """
-    df.write.csv(path, header=True, mode="overwrite")
-
-    
 def read_title_principals_df(path_to_df):
     """
     Read dataset title.basics
@@ -79,17 +69,6 @@ def read_title_principals_df(path_to_df):
     df = spark.read.csv(path_to_df, sep='\t', nullValue='null',
                         schema=title_principals_scheme, header=True)
     return df
-
-
-def write_title_principals_df_to_csv(df, path=write_path):
-    """
-    Write title_principals dataframe to csv file
-    :param df:
-    :param path:
-    :return: None
-    """
-    df.write.csv(path, header=True, mode="overwrite")
-
 
 
 def read_title_basics_df(path_to_df):
@@ -135,16 +114,6 @@ def read_title_episode_df(path_to_df):
     return from_tsv_default_df
 
 
-def write_title_episode_df_to_csv(df, path=write_path):
-    """
-    Write dataframe title.episode.tsv
-    :param df:
-    :param path:
-    :return:
-    """
-    df.write.csv(path, header=True, mode="overwrite")
-
-
 def read_title_crew_df(path_to_df):
     """
     Read dataset title_crew
@@ -157,16 +126,6 @@ def read_title_crew_df(path_to_df):
                                       t.StructField('writers', t.StringType(), True)])
     df = spark.read.csv(path_to_df, sep=r'\t', header=True, nullValue='null', schema=title_crew_schema)
     return df
-
-
-def write_title_crew_df_to_csv(df, path=write_path):
-    """
-    Write title_crew dataframe to csv file
-    :param df:
-    :param path:
-    :return:
-    """
-    df.write.csv(path, header=True, mode="overwrite")
 
 
 def read_title_ratings_df(path_to_df):
@@ -182,13 +141,3 @@ def read_title_ratings_df(path_to_df):
 
     df = spark.read.csv(path_to_df, sep=r'\t', header=True, nullValue='null', schema=title_ratings_schema)
     return df
-
-
-def write_title_ratings_df_to_csv(df, path=write_path):
-    """
-    Write title_ratings dataframe to csv file
-    :param df:
-    :param path:
-    :return:
-    """
-    df.write.csv(path, header=True, mode="overwrite")
