@@ -9,6 +9,10 @@ known_for_titles = 'known_for_titles'
 age = 'age'
 is_alive = 'is_alive'
 
+# column names from 'title_crew' dataframe
+directors = 'directors'
+writers = 'writers'
+
 # column names from 'title_akas' dataframe
 title_id = "title_id"
 ordering = "ordering"
@@ -24,3 +28,4 @@ tconst = "tconst"
 parent_tconst = "parent_tconst"
 season_number = "season_number"
 episode_number = "episode_number"
+
