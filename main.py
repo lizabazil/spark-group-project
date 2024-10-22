@@ -13,7 +13,6 @@ from process.process_title_akas import (make_types_col_array_type, make_attribut
                                         make_is_original_title_col_boolean_type)
 
 
-
 # df2 = basic_test_df2()
 # df2.show()
 
@@ -38,7 +37,7 @@ with_age_col_df = create_age_col(modified_col_known_for_titles_df)
 with_is_living_col_df = create_is_alive_col(with_age_col_df)
 renamed_col_nconst_df = rename_nconst_col(with_is_living_col_df)
 # renamed_col_nconst_df.show(truncate=False)
-write_name_basics_to_csv(renamed_col_nconst_df)
+write_dataframe_to_csv(renamed_col_nconst_df, name_basics_write_path)
 
 # title.basics.tsv
 title_basics_df = read_title_basics_df(title_basics_path)
@@ -50,35 +49,35 @@ null_from_string_to_none_df = null_from_string_to_none(convert_is_adult_col_to_b
 # null_from_string_to_none_df.show(truncate=False)
 
 # write to the file
-write_name_basics_to_csv(null_from_string_to_none_df, title_basics_write_path)
+write_dataframe_to_csv(null_from_string_to_none_df, title_basics_write_path)
 
-df_title_akas = read_title_akas_df(path)
+df_title_akas = read_title_akas_df(title_akas_path)
 df_snake_case_akas = change_column_names_to_snake_case(df_title_akas)
 df_title_akas_without_n = null_from_string_to_none(df_snake_case_akas)
 df_title_akas_types_array = make_types_col_array_type(df_title_akas_without_n)
 df_title_akas_attributes_array = make_attribute_col_array_type(df_title_akas_types_array)
 df_title_akas_is_original_title_boolean = make_is_original_title_col_boolean_type(df_title_akas_attributes_array)
 # df_title_akas_is_original_title_boolean.show()
-write_title_akas_df_to_csv(df_title_akas_is_original_title_boolean)
+write_dataframe_to_csv(df_title_akas_is_original_title_boolean, title_akas_write_path)
 
-df_episode = read_title_episode_df(path)
+df_episode = read_title_episode_df(title_episode_path)
 df_snake_case_episode = change_column_names_to_snake_case(df_episode)
 df_title_episode_without_n = null_from_string_to_none(df_snake_case_episode)
 # df_title_episode_without_n.show()
-write_title_episode_df_to_csv(df_title_episode_without_n)
+write_dataframe_to_csv(df_title_episode_without_n, title_episode_write_path)
 
-title_principals_df = read_title_principals_df(path)
+title_principals_df = read_title_principals_df(title_principals_path)
 snake_case_title_principals_df = change_column_names_to_snake_case(title_principals_df)
 title_principals_df_with_nulls = null_from_string_to_none(snake_case_title_principals_df)
-write_title_principals_df_to_csv(title_principals_df_with_nulls)
+write_dataframe_to_csv(title_principals_df_with_nulls, title_principal_write_path)
 
-title_crew_df = read_title_crew_df(path)
+title_crew_df = read_title_crew_df(title_crew_path)
 snake_case_title_crew_df = change_column_names_to_snake_case(title_crew_df)
 title_crew_df_with_nulls = null_from_string_to_none(snake_case_title_crew_df)
 title_crew_df_with_directors_as_array = convert_directors_col_to_array(title_crew_df_with_nulls)
 title_crew_df_with_writers_as_array = convert_writers_col_to_array(title_crew_df_with_directors_as_array)
-write_title_crew_df_to_csv(title_crew_df_with_writers_as_array)
+write_dataframe_to_csv(title_crew_df_with_writers_as_array, title_crew_write_path)
 
-title_ratings_df = read_title_ratings_df(path)
+title_ratings_df = read_title_ratings_df(title_ratings_path)
 snake_case_title_ratings_df = change_column_names_to_snake_case(title_ratings_df)
-write_title_ratings_df_to_csv(snake_case_title_ratings_df)
+write_dataframe_to_csv(snake_case_title_ratings_df, title_ratings_write_path)
