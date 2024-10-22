@@ -1,12 +1,10 @@
 from basic_dfs.basic_df_Rechkalova import basic_test_df as basic_test_df2
 from basic_dfs.basic_df_Shvets import basic_test_df as basic_test_df3
 from basic_dfs.basic_df_Tretiak import basic_test_df as basic_test_df1
-from io_h import read_name_basics_df, write_name_basics_to_csv, read_title_crew_df, write_title_crew_df_to_csv, \
-    read_title_ratings_df, write_title_ratings_df_to_csv
-from io_h import (read_title_principals_df, write_title_principals_df_to_csv, read_title_akas_df,
-                  write_title_akas_df_to_csv, read_title_episode_df, write_title_episode_df_to_csv)
+from io_h import *
+from setting import *
+from process.process_title_basics import make_genres_array_type, convert_is_adult_col_to_boolean_type
 from process.process_title_crew import convert_directors_col_to_array, convert_writers_col_to_array
-from setting import path
 from process.process_name_basics import (make_primary_profession_col_array_type,
                                          make_known_for_titles_col_array_type, create_age_col, create_is_alive_col,
                                          rename_nconst_col)
@@ -15,17 +13,18 @@ from process.process_title_akas import (make_types_col_array_type, make_attribut
                                         make_is_original_title_col_boolean_type)
 
 
-df2 = basic_test_df2()
-df2.show()
 
-df3 = basic_test_df3()
-df3.show()
+# df2 = basic_test_df2()
+# df2.show()
 
-df1 = basic_test_df1()
-df1.show()
+# df3 = basic_test_df3()
+# df3.show()
+
+# df1 = basic_test_df1()
+# df1.show()
 
 
-df1_name_basics = read_name_basics_df(path)  # liza's
+df1_name_basics = read_name_basics_df(name_basics_path)  # liza's
 # df1_name_basics.show(truncate=False)  # remove before commit
 # write_name_basics_to_csv(df1_name_basics)
 # change column names to snake_case style
@@ -40,6 +39,18 @@ with_is_living_col_df = create_is_alive_col(with_age_col_df)
 renamed_col_nconst_df = rename_nconst_col(with_is_living_col_df)
 # renamed_col_nconst_df.show(truncate=False)
 write_name_basics_to_csv(renamed_col_nconst_df)
+
+# title.basics.tsv
+title_basics_df = read_title_basics_df(title_basics_path)
+title_basics_to_snake_case_df = change_column_names_to_snake_case(title_basics_df)
+title_basics_genres_col_modified_df = make_genres_array_type(title_basics_to_snake_case_df)
+
+convert_is_adult_col_to_bool_df = convert_is_adult_col_to_boolean_type(title_basics_genres_col_modified_df)
+null_from_string_to_none_df = null_from_string_to_none(convert_is_adult_col_to_bool_df)
+# null_from_string_to_none_df.show(truncate=False)
+
+# write to the file
+write_name_basics_to_csv(null_from_string_to_none_df, title_basics_write_path)
 
 df_title_akas = read_title_akas_df(path)
 df_snake_case_akas = change_column_names_to_snake_case(df_title_akas)

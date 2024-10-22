@@ -9,6 +9,17 @@ known_for_titles = 'known_for_titles'
 age = 'age'
 is_alive = 'is_alive'
 
+# column names from 'title_basics' dataframe
+tconst = 'tconst'
+title_type = 'title_type'
+primary_type = 'primary_type'
+original_title = 'original_title'
+is_adult = 'is_adult'
+start_year = 'start_year'
+end_year = 'end_year'
+runtime_minutes = 'runtime_minutes'
+genres = 'genres'
+
 # column names from 'title_crew' dataframe
 directors = 'directors'
 writers = 'writers'
@@ -28,4 +39,3 @@ tconst = "tconst"
 parent_tconst = "parent_tconst"
 season_number = "season_number"
 episode_number = "episode_number"
-

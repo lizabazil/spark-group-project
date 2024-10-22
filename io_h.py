@@ -1,6 +1,5 @@
 from spark_session import spark_session
 import pyspark.sql.types as t
-from setting import write_path
 
 
 def read_name_basics_df(path_to_df):
@@ -92,6 +91,33 @@ def write_title_principals_df_to_csv(df, path=write_path):
     df.write.csv(path, header=True, mode="overwrite")
 
 
+
+def read_title_basics_df(path_to_df):
+    """
+    To read the dataset title.basics.tsv
+
+    Args:
+         path_to_df: the path to the dataset.
+
+    Returns:
+        dataframe
+    """
+    spark = spark_session.getActiveSession()
+    title_basics_schema = t.StructType([t.StructField('tconst', t.StringType(), False),
+                                       t.StructField('titleType', t.StringType(), False),
+                                        t.StructField('primaryTitle', t.StringType(), False),
+                                        t.StructField('originalTitle', t.StringType(), False),
+                                        t.StructField('isAdult', t.IntegerType(), False),
+                                        t.StructField('startYear', t.IntegerType(), True),
+                                        t.StructField('endYear', t.IntegerType(), True),
+                                        t.StructField('runtimeMinutes', t.IntegerType(), True),
+                                        t.StructField('genres', t.StringType(), True)
+                                        ])
+
+    df = spark.read.csv(path_to_df, sep=r'\t', header=True, nullValue='null', schema=title_basics_schema)
+    return df
+
+  
 def read_title_episode_df(path_to_df):
     """
     Read title.episode.tsv file and return
