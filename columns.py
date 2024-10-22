@@ -10,3 +10,4 @@ age = 'age'
 is_alive = 'is_alive'
 # title.crew
 directors = 'directors'
+writers = 'writers'
