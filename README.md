@@ -12,12 +12,12 @@ IMDB dataset:
 9. What are the predominant genres of movies that are over 120 minutes long?
 10. Which films have the most directors and writers on the team?
 11. How has the number of films made in Ukraine changed over the past 10 years?
-12. What is the average episode length of thriller series?
-13. Which TV series have the most seasons and keep a high rating?
-14. Which directors work most often with drama?
-15. Which directors make the most series in 2000-2005?
-16. Which actors work most often with comedy?
-17. Which directors have the most movies rated above 7.0?
-18. Which countries produced the most movies rated above 8.0?
-19. What is the number of adult rated movies in the last 10 years?
-20. Which films receive the highest ratings in the short category?
+12. Which movies (titles) were made between 1950 and 1960 year?
+13. Find original titles of short comedy films.
+14. Which films include 3 genres?
+15. People, who are actors and directors or actresses and directors at the same time. 
+16. People who are known for only one title of movie.
+17. Which titles have Ukrainian translations.
+18. People, who are directors, but not producers.
+19. People, who have only top-2 professions.
+20. Which titles of movies have drama genre and runtime minutes more than 70.
