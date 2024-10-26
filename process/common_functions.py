@@ -34,7 +34,7 @@ def to_snake_case(name_column):
 
 
 def null_from_string_to_none(df):
-    """
+    r"""
     To change all \N (strings) to None values.
 
     Args:
