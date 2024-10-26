@@ -59,4 +59,3 @@ def drop_null_rows_episode(df):
     """
     df = df.filter(~(f.col(season_number).isNull() & f.col(episode_number).isNull()))
     return df
-
