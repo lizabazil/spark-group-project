@@ -1,4 +1,4 @@
-from columns import types, attributes, season_number, episode_number
+from columns import types, attributes, season_number, episode_number, region, language
 import pyspark.sql.functions as f
 
 
@@ -28,6 +28,20 @@ def drop_attributes_column(df):
         df: The modified title_akas dataframe.
     """
     df = df.drop(attributes)
+    return df
+
+
+def fillna_region_language_with_unknown(df):
+    """
+    To fill null values in region and language columns with "unknown".
+
+    Args:
+        df (dataframe): The dataframe (title_akas).
+
+    Returns:
+        df: The modified title_akas dataframe.
+    """
+    df = df.fillna('unknown', subset=[region, language])
     return df
 
 
