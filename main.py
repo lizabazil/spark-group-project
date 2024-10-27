@@ -6,11 +6,82 @@ from setting import *
 from process.process_title_basics import make_genres_array_type, convert_is_adult_col_to_boolean_type
 from process.process_title_crew import convert_directors_col_to_array, convert_writers_col_to_array
 from process.process_name_basics import (make_primary_profession_col_array_type,
-                                         make_known_for_titles_col_array_type, create_age_col, create_is_alive_col,
+                                         make_known_for_titles_col_array_type,
                                          rename_nconst_col)
 from process.common_functions import change_column_names_to_snake_case, null_from_string_to_none
 from process.process_title_akas import (make_types_col_array_type, make_attribute_col_array_type,
                                         make_is_original_title_col_boolean_type)
+from cleaning import (drop_col_birth_year_from_name_basics_df, drop_col_death_year_from_name_basics_df,
+                      fill_col_end_year_in_title_basics_df, fill_col_runtime_minutes_in_title_basics)
+
+
+def dealing_with_null_columns_name_basics(name_basics_df):
+    """
+    To perform operations on dealing with null columns in name.basics dataframe.
+
+    Args:
+        name_basics_df (pyspark dataframe): name.basiscs dataframe.
+
+    Returns:
+        (pyspark dataframe): name.basics dataframe with performed operations (dealing with null columns, such as
+        deleting or filling them)
+    """
+    deleted_col_birth_year_df = drop_col_birth_year_from_name_basics_df(name_basics_df)
+    deleted_col_death_year_df = drop_col_death_year_from_name_basics_df(deleted_col_birth_year_df)
+    return deleted_col_death_year_df
+
+
+def dealing_with_null_columns_title_basics(title_basics_dataframe):
+    """
+    To perform operations on dealing with null columns in title.basics dataframe.
+
+    Args:
+        title_basics_dataframe (pyspark dataframe): title.basiscs dataframe.
+
+    Returns:
+        (pyspark dataframe): title.basics dataframe with performed operations (dealing with null columns, such as
+        deleting or filling them)
+    """
+    with_filled_col_end_year_df = fill_col_end_year_in_title_basics_df(title_basics_dataframe)
+    with_filled_col_runtime_minutes_df = fill_col_runtime_minutes_in_title_basics(with_filled_col_end_year_df)
+    return with_filled_col_runtime_minutes_df
+
+
+def processing_cols_name_basics(name_basics_df):
+    """
+    To perform operations on processing columns in name.basics dataframe (such as changing columns types and names)
+
+    Args:
+         name_basics_df (pyspark dataframe): name.basics dataframe
+
+    Returns:
+        (pyspark dataframe): name.basics dataframe with performed operations
+    """
+    null_values_to_none_df = null_from_string_to_none(name_basics_df)
+    snake_case_name_basics_df = change_column_names_to_snake_case(null_values_to_none_df)
+    modified_col_primary_profession_df = make_primary_profession_col_array_type(snake_case_name_basics_df)
+    modified_col_known_for_titles_df = make_known_for_titles_col_array_type(modified_col_primary_profession_df)
+
+    renamed_col_nconst_df = rename_nconst_col(modified_col_known_for_titles_df)
+    return renamed_col_nconst_df
+
+
+def processing_cols_title_basics(title_basics_dataframe):
+    """
+    To perform operations on processing columns in title.basics dataframe (such as changing columns types and names)
+
+    Args:
+        title_basics_dataframe (pyspark dataframe): title.basics dataframe
+
+    Returns:
+        (pyspark dataframe): title.basics dataframe with performed operations
+       """
+    null_values_to_none_df = null_from_string_to_none(title_basics_dataframe)
+    title_basics_to_snake_case_df = change_column_names_to_snake_case(null_values_to_none_df)
+    title_basics_genres_col_modified_df = make_genres_array_type(title_basics_to_snake_case_df)
+
+    convert_is_adult_col_to_bool_df = convert_is_adult_col_to_boolean_type(title_basics_genres_col_modified_df)
+    return convert_is_adult_col_to_bool_df
 
 
 # df2 = basic_test_df2()
@@ -22,34 +93,19 @@ from process.process_title_akas import (make_types_col_array_type, make_attribut
 # df1 = basic_test_df1()
 # df1.show()
 
+# name.basics.tsv
+df1_name_basics = read_name_basics_df(name_basics_path)
+after_processing_name_basics_df = processing_cols_name_basics(df1_name_basics)
 
-df1_name_basics = read_name_basics_df(name_basics_path)  # liza's
-# df1_name_basics.show(truncate=False)  # remove before commit
-# write_name_basics_to_csv(df1_name_basics)
-# change column names to snake_case style
-snake_case_name_basics_df = change_column_names_to_snake_case(df1_name_basics)
-# change primary_profession type to array type
-modified_col_primary_profession_df = make_primary_profession_col_array_type(snake_case_name_basics_df)
-modified_col_known_for_titles_df = make_known_for_titles_col_array_type(modified_col_primary_profession_df)
-
-# create new column 'age'
-with_age_col_df = create_age_col(modified_col_known_for_titles_df)
-with_is_living_col_df = create_is_alive_col(with_age_col_df)
-renamed_col_nconst_df = rename_nconst_col(with_is_living_col_df)
-# renamed_col_nconst_df.show(truncate=False)
-write_dataframe_to_csv(renamed_col_nconst_df, name_basics_write_path)
+after_dealing_with_null_cols_df = dealing_with_null_columns_name_basics(after_processing_name_basics_df)
+write_name_basics_to_csv(after_dealing_with_null_cols_df, name_basics_write_path)
 
 # title.basics.tsv
 title_basics_df = read_title_basics_df(title_basics_path)
-title_basics_to_snake_case_df = change_column_names_to_snake_case(title_basics_df)
-title_basics_genres_col_modified_df = make_genres_array_type(title_basics_to_snake_case_df)
 
-convert_is_adult_col_to_bool_df = convert_is_adult_col_to_boolean_type(title_basics_genres_col_modified_df)
-null_from_string_to_none_df = null_from_string_to_none(convert_is_adult_col_to_bool_df)
-# null_from_string_to_none_df.show(truncate=False)
-
-# write to the file
-write_dataframe_to_csv(null_from_string_to_none_df, title_basics_write_path)
+after_processing_title_basics_df = processing_cols_title_basics(title_basics_df)
+after_dealing_with_null_cols_title_basics_df = dealing_with_null_columns_title_basics(after_processing_title_basics_df)
+write_title_basics_to_csv(after_dealing_with_null_cols_title_basics_df, title_basics_write_path)
 
 df_title_akas = read_title_akas_df(title_akas_path)
 df_snake_case_akas = change_column_names_to_snake_case(df_title_akas)
