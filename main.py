@@ -11,6 +11,7 @@ from process.process_name_basics import (make_primary_profession_col_array_type,
 from process.common_functions import change_column_names_to_snake_case, null_from_string_to_none
 from process.process_title_akas import (make_types_col_array_type, make_attribute_col_array_type,
                                         make_is_original_title_col_boolean_type)
+from cleaning import *
 
 
 # df2 = basic_test_df2()
@@ -69,7 +70,8 @@ write_dataframe_to_csv(df_title_episode_without_n, title_episode_write_path)
 title_principals_df = read_title_principals_df(title_principals_path)
 snake_case_title_principals_df = change_column_names_to_snake_case(title_principals_df)
 title_principals_df_with_nulls = null_from_string_to_none(snake_case_title_principals_df)
-write_dataframe_to_csv(title_principals_df_with_nulls, title_principal_write_path)
+title_principals_df_without_job_col = drop_job_column_in_title_principals(title_principals_df_with_nulls)
+write_dataframe_to_csv(title_principals_df_without_job_col, title_principal_write_path)
 
 title_crew_df = read_title_crew_df(title_crew_path)
 snake_case_title_crew_df = change_column_names_to_snake_case(title_crew_df)

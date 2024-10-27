@@ -39,3 +39,8 @@ tconst = "tconst"
 parent_tconst = "parent_tconst"
 season_number = "season_number"
 episode_number = "episode_number"
+
+# column names from 'title_principals' dataframe
+category = 'category'
+job = 'job'
+characters = 'characters'
