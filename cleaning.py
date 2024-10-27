@@ -159,3 +159,15 @@ def fill_col_runtime_minutes_in_title_basics(df):
                                                             )
 
     return filled_col_runtime_minutes_with_mode_df
+
+
+def delete_duplicates(df):
+    """
+    Deletes duplicates in dataframe.
+    Args:
+        df: dataframe
+    Returns:
+        df: dataframe without duplicates
+    """
+    df = df.dropDuplicates()
+    return df
