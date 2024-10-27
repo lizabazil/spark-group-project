@@ -1,5 +1,7 @@
 from spark_session import spark_session
 import pyspark.sql.types as t
+from columns import *
+import pyspark.sql.functions as f
 
 
 def write_dataframe_to_csv(df, write_path_to_df):
@@ -31,6 +33,42 @@ def read_name_basics_df(path_to_df):
     return df
 
 
+def write_name_basics_to_csv(name_basics_df, write_path):
+    """
+    Write dataframe name.basics to csv file.
+
+    Args:
+         name_basics_df: name.basics dataframe
+         write_path: path to write
+
+    Returns:
+        None
+    """
+    name_basics_df = name_basics_df.withColumn(primary_profession,
+                                               f.concat_ws(',', f.col(primary_profession)))
+    name_basics_df = name_basics_df.withColumn(known_for_titles,
+                                               f.concat_ws(',', f.col(known_for_titles)))
+    name_basics_df.write.csv(write_path, mode='overwrite', header=True)
+    return None
+
+
+def write_title_basics_to_csv(title_basics_df, write_path):
+    """
+    Write dataframe title.basics to csv file.
+
+    Args:
+        title_basics_df: name.basics dataframe
+        write_path: path to write
+
+    Returns:
+        None
+        """
+    title_basics_df = title_basics_df.withColumn(genres,
+                                                 f.concat_ws(',', f.col(genres)))
+    title_basics_df.write.csv(write_path, mode='overwrite', header=True)
+    return None
+
+
 def read_title_akas_df(path_to_df):
     """
     Read title.akas.tsv file and return
@@ -44,7 +82,7 @@ def read_title_akas_df(path_to_df):
                                       t.StructField('language', t.StringType(), True),
                                       t.StructField('types', t.StringType(), True),
                                       t.StructField('attributes', t.StringType(), True),
-                                      t.StructField('isOriginalTitle', t.IntegerType(), False),])
+                                      t.StructField('isOriginalTitle', t.IntegerType(), False), ])
 
     spark = spark_session.getActiveSession()
     from_tsv_default_df = spark.read.csv(path_to_df, sep=r"\t", header=True, nullValue='null', schema=title_akas_schema)
@@ -83,7 +121,7 @@ def read_title_basics_df(path_to_df):
     """
     spark = spark_session.getActiveSession()
     title_basics_schema = t.StructType([t.StructField('tconst', t.StringType(), False),
-                                       t.StructField('titleType', t.StringType(), False),
+                                        t.StructField('titleType', t.StringType(), False),
                                         t.StructField('primaryTitle', t.StringType(), False),
                                         t.StructField('originalTitle', t.StringType(), False),
                                         t.StructField('isAdult', t.IntegerType(), False),
@@ -96,7 +134,7 @@ def read_title_basics_df(path_to_df):
     df = spark.read.csv(path_to_df, sep=r'\t', header=True, nullValue='null', schema=title_basics_schema)
     return df
 
-  
+
 def read_title_episode_df(path_to_df):
     """
     Read title.episode.tsv file and return
@@ -104,9 +142,9 @@ def read_title_episode_df(path_to_df):
     :return: dataframe
     """
     title_episode_schema = t.StructType([t.StructField('tconst', t.StringType(), False),
-                                      t.StructField('parentTconst', t.StringType(), False),
-                                      t.StructField('seasonNumber', t.IntegerType(), True),
-                                      t.StructField('episodeNumber', t.IntegerType(), True),])
+                                         t.StructField('parentTconst', t.StringType(), False),
+                                         t.StructField('seasonNumber', t.IntegerType(), True),
+                                         t.StructField('episodeNumber', t.IntegerType(), True), ])
 
     spark = spark_session.getActiveSession()
     from_tsv_default_df = spark.read.csv(path_to_df, sep=r"\t", header=True, nullValue='null',
