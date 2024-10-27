@@ -106,7 +106,7 @@ title_basics_df = read_title_basics_df(title_basics_path)
 after_processing_title_basics_df = processing_cols_title_basics(title_basics_df)
 after_dealing_with_null_cols_title_basics_df = dealing_with_null_columns_title_basics(after_processing_title_basics_df)
 write_title_basics_to_csv(after_dealing_with_null_cols_title_basics_df, title_basics_write_path)
-"""
+
 df_title_akas = read_title_akas_df(title_akas_path)
 df_snake_case_akas = change_column_names_to_snake_case(df_title_akas)
 df_title_akas_without_n = null_from_string_to_none(df_snake_case_akas)
@@ -137,6 +137,3 @@ write_dataframe_to_csv(title_crew_df_with_writers_as_array, title_crew_write_pat
 title_ratings_df = read_title_ratings_df(title_ratings_path)
 snake_case_title_ratings_df = change_column_names_to_snake_case(title_ratings_df)
 write_dataframe_to_csv(snake_case_title_ratings_df, title_ratings_write_path)
-"""
-
-
