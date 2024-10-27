@@ -86,6 +86,40 @@ def processing_cols_title_basics(title_basics_dataframe):
     return convert_is_adult_col_to_bool_df
 
 
+def processing_cols_title_akas(title_akas):
+    """
+    To process title.akas dataframe (change to snake case, types etc)
+
+    Args:
+        title_akas (dataframe): title.akas dataframe
+
+    Returns:
+        (dataframe): title.akas dataframe with performed operations
+    """
+    df_snake_case_akas = change_column_names_to_snake_case(title_akas)
+    df_title_akas_without_n = null_from_string_to_none(df_snake_case_akas)
+    df_title_akas_types_array = make_types_col_array_type(df_title_akas_without_n)
+    df_title_akas_attributes_array = make_attribute_col_array_type(df_title_akas_types_array)
+    df_title_akas_is_original_title_boolean = make_is_original_title_col_boolean_type(df_title_akas_attributes_array)
+    return df_title_akas_is_original_title_boolean
+
+
+def dealing_with_null_columns_title_akas(title_akas):
+    """
+    To deal with null values in columns in title.akas.
+
+    Args:
+        title_akas (dataframe): title.akas dataframe
+
+    Returns:
+        (dataframe): title.akas dataframe with performed operations
+    """
+    df_title_akas_drop_types = drop_types_column(title_akas)
+    df_title_akas_drop_attributes = drop_attributes_column(df_title_akas_drop_types)
+    title_akas_fillna_region_language = fillna_region_language_with_unknown(df_title_akas_drop_attributes)
+    return title_akas_fillna_region_language
+
+
 def business_questions_rechkalova(df_name_basics, df_title_akas):
     """
     Questions 15-17 from README. Writing results to a csv file.
@@ -137,15 +171,9 @@ write_title_basics_to_csv(title_basics_df_without_duplicates, title_basics_write
 
 # title.akas.tsv
 df_title_akas = read_title_akas_df(title_akas_path)
-df_snake_case_akas = change_column_names_to_snake_case(df_title_akas)
-df_title_akas_without_n = null_from_string_to_none(df_snake_case_akas)
-df_title_akas_types_array = make_types_col_array_type(df_title_akas_without_n)
-df_title_akas_attributes_array = make_attribute_col_array_type(df_title_akas_types_array)
-df_title_akas_is_original_title_boolean = make_is_original_title_col_boolean_type(df_title_akas_attributes_array)
-df_title_akas_drop_types = drop_types_column(df_title_akas_is_original_title_boolean)
-df_title_akas_drop_attributes = drop_attributes_column(df_title_akas_drop_types)
-title_akas_fillna_region_language = fillna_region_language_with_unknown(df_title_akas_drop_attributes)
-title_akas_without_duplicates = delete_duplicates(title_akas_fillna_region_language)
+df_title_akas_process = processing_cols_title_akas(df_title_akas)
+df_title_akas_cleaning = dealing_with_null_columns_title_akas(df_title_akas_process)
+title_akas_without_duplicates = delete_duplicates(df_title_akas_cleaning)
 write_dataframe_to_csv(title_akas_without_duplicates, title_akas_write_path)
 
 # title.episode.tsv
