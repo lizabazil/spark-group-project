@@ -1,7 +1,7 @@
 from spark_session import spark_session
 import pyspark.sql.types as t
-from columns import *
 import pyspark.sql.functions as f
+from columns import *
 
 
 def write_dataframe_to_csv(df, write_path_to_df):
@@ -179,3 +179,20 @@ def read_title_ratings_df(path_to_df):
 
     df = spark.read.csv(path_to_df, sep=r'\t', header=True, nullValue='null', schema=title_ratings_schema)
     return df
+
+
+def write_title_crew_to_csv(title_crew_df, write_path):
+    """
+    Write dataframe title_crew to csv file.
+    Args:
+         title_crew_df: title_crew dataframe
+         write_path: path to write
+    Returns:
+        None
+    """
+    title_crew_df = title_crew_df.withColumn(directors,
+                                             f.concat_ws(',', f.col(directors)))
+    title_crew_df = title_crew_df.withColumn(writers,
+                                             f.concat_ws(',', f.col(writers)))
+    title_crew_df.write.csv(write_path, mode='overwrite', header=True)
+    return None

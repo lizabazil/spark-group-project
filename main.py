@@ -11,8 +11,7 @@ from process.process_name_basics import (make_primary_profession_col_array_type,
 from process.common_functions import change_column_names_to_snake_case, null_from_string_to_none
 from process.process_title_akas import (make_types_col_array_type, make_attribute_col_array_type,
                                         make_is_original_title_col_boolean_type)
-from cleaning import (drop_col_birth_year_from_name_basics_df, drop_col_death_year_from_name_basics_df,
-                      fill_col_end_year_in_title_basics_df, fill_col_runtime_minutes_in_title_basics)
+from cleaning import *
 
 
 def dealing_with_null_columns_name_basics(name_basics_df):
@@ -125,14 +124,17 @@ write_dataframe_to_csv(df_title_episode_without_n, title_episode_write_path)
 title_principals_df = read_title_principals_df(title_principals_path)
 snake_case_title_principals_df = change_column_names_to_snake_case(title_principals_df)
 title_principals_df_with_nulls = null_from_string_to_none(snake_case_title_principals_df)
-write_dataframe_to_csv(title_principals_df_with_nulls, title_principal_write_path)
+title_principals_df_without_job_col = drop_job_column_in_title_principals(title_principals_df_with_nulls)
+title_principals_df_without_characters = drop_characters_column_in_title_principals(title_principals_df_without_job_col)
+write_dataframe_to_csv(title_principals_df_without_characters, title_principal_write_path)
 
 title_crew_df = read_title_crew_df(title_crew_path)
 snake_case_title_crew_df = change_column_names_to_snake_case(title_crew_df)
 title_crew_df_with_nulls = null_from_string_to_none(snake_case_title_crew_df)
 title_crew_df_with_directors_as_array = convert_directors_col_to_array(title_crew_df_with_nulls)
 title_crew_df_with_writers_as_array = convert_writers_col_to_array(title_crew_df_with_directors_as_array)
-write_dataframe_to_csv(title_crew_df_with_writers_as_array, title_crew_write_path)
+title_crew_df_without_null_rows = drop_null_rows_in_title_crew(title_crew_df_with_writers_as_array)
+write_title_crew_to_csv(title_crew_df_without_null_rows, title_crew_write_path)
 
 title_ratings_df = read_title_ratings_df(title_ratings_path)
 snake_case_title_ratings_df = change_column_names_to_snake_case(title_ratings_df)
