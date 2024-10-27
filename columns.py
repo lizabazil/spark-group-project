@@ -44,3 +44,7 @@ episode_number = "episode_number"
 category = 'category'
 job = 'job'
 characters = 'characters'
+
+# column names from 'title_ratings' dataframe
+average_rating = 'average_rating'
+num_votes = 'num_votes'
