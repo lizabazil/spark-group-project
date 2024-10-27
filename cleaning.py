@@ -40,7 +40,7 @@ def fill_col_end_year_in_title_basics_df(df):
                          .otherwise(f.col(end_year)))
 
 
-def fill_col_runtime_minutes_with_mode_depending_on_title_type(df):
+def fill_col_runtime_minutes_in_title_basics(df):
     """
     Fill column runtime_minutes with mode of this column, depending on value in column  title_type.
     Args:
