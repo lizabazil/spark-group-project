@@ -31,3 +31,17 @@ def get_titles_of_short_comedies(title_basics_df):
     titles_of_short_comedy_films_df = title_basics_df.filter((f.col(title_type) == 'short') &
                                                              (f.array_contains(f.col(genres), 'Comedy')))
     return titles_of_short_comedy_films_df
+
+
+def get_titles_with_3_genres(title_basics_df):
+    """
+    Get the titles, which have 3 genres
+
+    Args:
+         title_basics_df (pyspark DataFrame): DataFrame title.basics
+
+    Returns:
+        (pyspark DataFrame): filtered DataFrame with titles, which have 3 genres
+    """
+    titles_with_3_genres_df = title_basics_df.filter(f.size(f.col(genres)) == 3)
+    return titles_with_3_genres_df
