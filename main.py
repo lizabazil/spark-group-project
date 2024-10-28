@@ -12,10 +12,13 @@ from process.common_functions import change_column_names_to_snake_case, null_fro
 from process.process_title_akas import (make_types_col_array_type, make_attribute_col_array_type,
                                         make_is_original_title_col_boolean_type)
 from cleaning import *
+from filtering.filtering_Tretiak import (get_titles_made_between_1950_and_1960, get_titles_of_short_comedies,
+                                         get_titles_with_3_genres)
 from filtering.filtering_Shvets import *
 from filtering.filtering_Rechkalova import (actors_or_actresses_and_directors_at_the_same_time,
                                             people_who_are_known_for_one_title_movie,
                                             titles_with_ukrainian_translation)
+
 
 
 def dealing_with_null_columns_name_basics(name_basics_df):
@@ -87,6 +90,26 @@ def processing_cols_title_basics(title_basics_dataframe):
     return convert_is_adult_col_to_bool_df
 
 
+def business_questions_tretiak(title_basics_df):
+    """
+    To answer business questions # 12-14 and write result dataframes to csv files.
+
+    Args:
+        title_basics_df (pyspark dataframe): title.basics dataframe
+
+    Returns:
+        None
+    """
+    titles_from_1950_to_1960_df = get_titles_made_between_1950_and_1960(title_basics_df)
+    write_title_basics_to_csv(titles_from_1950_to_1960_df, 'data/results/question_12')
+
+    titles_short_comedy_df = get_titles_of_short_comedies(title_basics_df)
+    write_title_basics_to_csv(titles_short_comedy_df, 'data/results/question_13')
+
+    titles_with_3_genres_df = get_titles_with_3_genres(title_basics_df)
+    write_title_basics_to_csv(titles_with_3_genres_df, 'data/results/question_14')
+
+    
 def process_cols_title_principals(title_principals):
     """
     Processes title_principals dataframe (change to snake case, types)
@@ -279,3 +302,4 @@ write_dataframe_to_csv(title_ratings_df_without_duplicates, title_ratings_write_
 #filtering
 business_questions_shvets(name_basics_df_without_duplicates, title_basics_df_without_duplicates)
 business_questions_rechkalova(name_basics_df_without_duplicates, title_akas_without_duplicates)
+business_questions_tretiak(title_basics_df_without_duplicates)
