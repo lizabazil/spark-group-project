@@ -13,6 +13,9 @@ from process.process_title_akas import (make_types_col_array_type, make_attribut
                                         make_is_original_title_col_boolean_type)
 from cleaning import *
 from filtering.filtering_Shvets import *
+from filtering.filtering_Rechkalova import (actors_or_actresses_and_directors_at_the_same_time,
+                                            people_who_are_known_for_one_title_movie,
+                                            titles_with_ukrainian_translation)
 
 
 def dealing_with_null_columns_name_basics(name_basics_df):
@@ -157,6 +160,62 @@ def business_questions_shvets(name_basics, title_basics):
 
     dramas_with_more_than_70_mins_runtime = get_dramas_with_more_than_70_mins_runtime(title_basics)
     write_title_basics_to_csv(dramas_with_more_than_70_mins_runtime, 'data/results/question_20')
+
+    
+def processing_cols_title_akas(title_akas):
+    """
+    To process title.akas dataframe (change to snake case, types etc)
+
+    Args:
+        title_akas (dataframe): title.akas dataframe
+
+    Returns:
+        (dataframe): title.akas dataframe with performed operations
+    """
+    df_snake_case_akas = change_column_names_to_snake_case(title_akas)
+    df_title_akas_without_n = null_from_string_to_none(df_snake_case_akas)
+    df_title_akas_types_array = make_types_col_array_type(df_title_akas_without_n)
+    df_title_akas_attributes_array = make_attribute_col_array_type(df_title_akas_types_array)
+    df_title_akas_is_original_title_boolean = make_is_original_title_col_boolean_type(df_title_akas_attributes_array)
+    return df_title_akas_is_original_title_boolean
+
+
+def dealing_with_null_columns_title_akas(title_akas):
+    """
+    To deal with null values in columns in title.akas.
+
+    Args:
+        title_akas (dataframe): title.akas dataframe
+
+    Returns:
+        (dataframe): title.akas dataframe with performed operations
+    """
+    df_title_akas_drop_types = drop_types_column(title_akas)
+    df_title_akas_drop_attributes = drop_attributes_column(df_title_akas_drop_types)
+    title_akas_fillna_region_language = fillna_region_language_with_unknown(df_title_akas_drop_attributes)
+    return title_akas_fillna_region_language
+
+
+def business_questions_rechkalova(df_name_basics, df_title_akas):
+    """
+    Questions 15-17 from README. Writing results to a csv file.
+
+    Args:
+         df_name_basics (dataframe): name.basics dataframe.
+         df_title_akas (dataframe): title.akas dataframe.
+
+    Returns:
+        None
+    """
+    # 15
+    df_actors_or_actresses_and_directors = actors_or_actresses_and_directors_at_the_same_time(df_name_basics)
+    write_name_basics_to_csv(df_actors_or_actresses_and_directors, question_15)
+    # 16
+    df_people_with_one_title_movie = people_who_are_known_for_one_title_movie(df_name_basics)
+    write_name_basics_to_csv(df_people_with_one_title_movie, question_16)
+    # 17
+    df_titles_with_ukrainian_translation = titles_with_ukrainian_translation(df_title_akas)
+    write_dataframe_to_csv(df_titles_with_ukrainian_translation, question_17)
     return None
 
 
@@ -185,25 +244,20 @@ after_dealing_with_null_cols_title_basics_df = dealing_with_null_columns_title_b
 title_basics_df_without_duplicates = delete_duplicates(after_dealing_with_null_cols_title_basics_df)
 write_title_basics_to_csv(title_basics_df_without_duplicates, title_basics_write_path)
 
+
+# title.akas.tsv
 df_title_akas = read_title_akas_df(title_akas_path)
-df_snake_case_akas = change_column_names_to_snake_case(df_title_akas)
-df_title_akas_without_n = null_from_string_to_none(df_snake_case_akas)
-df_title_akas_types_array = make_types_col_array_type(df_title_akas_without_n)
-df_title_akas_attributes_array = make_attribute_col_array_type(df_title_akas_types_array)
-df_title_akas_is_original_title_boolean = make_is_original_title_col_boolean_type(df_title_akas_attributes_array)
-df_title_akas_drop_types = drop_types_column(df_title_akas_is_original_title_boolean)
-df_title_akas_drop_attributes = drop_attributes_column(df_title_akas_drop_types)
-title_akas_fillna_region_language = fillna_region_language_with_unknown(df_title_akas_drop_attributes)
-title_akas_without_duplicates = delete_duplicates(title_akas_fillna_region_language)
-# title_akas_fillna_region_language.show()
+df_title_akas_process = processing_cols_title_akas(df_title_akas)
+df_title_akas_cleaning = dealing_with_null_columns_title_akas(df_title_akas_process)
+title_akas_without_duplicates = delete_duplicates(df_title_akas_cleaning)
 write_dataframe_to_csv(title_akas_without_duplicates, title_akas_write_path)
 
+# title.episode.tsv
 df_episode = read_title_episode_df(title_episode_path)
 df_snake_case_episode = change_column_names_to_snake_case(df_episode)
 df_title_episode_without_n = null_from_string_to_none(df_snake_case_episode)
 df_episode_without_null_rows = drop_null_rows_episode(df_title_episode_without_n)
 df_episode_without_duplicates = delete_duplicates(df_episode_without_null_rows)
-# df_episode_without_null_rows.show()
 write_dataframe_to_csv(df_episode_without_duplicates, title_episode_write_path)
 
 
@@ -222,4 +276,6 @@ snake_case_title_ratings_df = change_column_names_to_snake_case(title_ratings_df
 title_ratings_df_without_duplicates = delete_duplicates(snake_case_title_ratings_df)
 write_dataframe_to_csv(title_ratings_df_without_duplicates, title_ratings_write_path)
 
+#filtering
 business_questions_shvets(name_basics_df_without_duplicates, title_basics_df_without_duplicates)
+business_questions_rechkalova(name_basics_df_without_duplicates, title_akas_without_duplicates)
