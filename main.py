@@ -12,6 +12,7 @@ from process.common_functions import change_column_names_to_snake_case, null_fro
 from process.process_title_akas import (make_types_col_array_type, make_attribute_col_array_type,
                                         make_is_original_title_col_boolean_type)
 from cleaning import *
+from filtering.filtering_Shvets import *
 from filtering.filtering_Rechkalova import (actors_or_actresses_and_directors_at_the_same_time,
                                             people_who_are_known_for_one_title_movie,
                                             titles_with_ukrainian_translation)
@@ -86,6 +87,81 @@ def processing_cols_title_basics(title_basics_dataframe):
     return convert_is_adult_col_to_bool_df
 
 
+def process_cols_title_principals(title_principals):
+    """
+    Processes title_principals dataframe (change to snake case, types)
+    Args:
+        title_principals (dataframe): title_principals df
+    Returns:
+        (dataframe): processed title_principals df
+    """
+    snake_case_title_principals_df = change_column_names_to_snake_case(title_principals)
+    title_principals_df_with_nulls = null_from_string_to_none(snake_case_title_principals_df)
+    return title_principals_df_with_nulls
+
+
+def clean_title_principals(title_principals):
+    """
+    Cleans title_principals dataframe (null values and duplicates)
+    Args:
+        title_principals (dataframe): title_principals df
+    Returns:
+        (dataframe): title_principals df with processed null values
+    """
+    title_principals_df_without_job_col = drop_job_column_in_title_principals(title_principals)
+    title_principals_df_without_characters = drop_characters_column_in_title_principals(
+        title_principals_df_without_job_col)
+    title_principals_df_without_duplicates = delete_duplicates(title_principals_df_without_characters)
+    return title_principals_df_without_duplicates
+
+
+def process_cols_title_crew(title_crew):
+    """
+    Processes title_crew dataframe (change to snake case, types)
+    Args:
+        title_crew (dataframe): title_crew df
+    Returns:
+        (dataframe): processed title_crew df
+    """
+    snake_case_title_crew_df = change_column_names_to_snake_case(title_crew)
+    title_crew_df_with_nulls = null_from_string_to_none(snake_case_title_crew_df)
+    title_crew_df_with_directors_as_array = convert_directors_col_to_array(title_crew_df_with_nulls)
+    title_crew_df_with_writers_as_array = convert_writers_col_to_array(title_crew_df_with_directors_as_array)
+    return title_crew_df_with_writers_as_array
+
+
+def clean_title_crew(title_crew):
+    """
+    Cleans title_crew dataframe (null values and duplicates)
+    Args:
+        title_crew (dataframe): title_crew df
+    Returns:
+        (dataframe): title_crew df with processed null values
+    """
+    title_crew_df_without_null_rows = drop_null_rows_in_title_crew(title_crew)
+    title_crew_df_without_duplicates = delete_duplicates(title_crew_df_without_null_rows)
+    return title_crew_df_without_duplicates
+
+
+def business_questions_shvets(name_basics, title_basics):
+    """
+    Finds answers to business questions 18-20 and writes results to csv files.
+    Args:
+        name_basics (dataframe): name_basics dataframe
+        title_basics (dataframe): title_basics dataframe
+    Returns:
+        None
+    """
+    directors_not_producers = get_directors_not_producers(name_basics)
+    write_name_basics_to_csv(directors_not_producers, 'data/results/question_18')
+
+    people_with_only_2_professions = get_people_with_only_2_professions(name_basics)
+    write_name_basics_to_csv(people_with_only_2_professions, 'data/results/question_19')
+
+    dramas_with_more_than_70_mins_runtime = get_dramas_with_more_than_70_mins_runtime(title_basics)
+    write_title_basics_to_csv(dramas_with_more_than_70_mins_runtime, 'data/results/question_20')
+
+    
 def processing_cols_title_akas(title_akas):
     """
     To process title.akas dataframe (change to snake case, types etc)
@@ -186,27 +262,20 @@ write_dataframe_to_csv(df_episode_without_duplicates, title_episode_write_path)
 
 
 title_principals_df = read_title_principals_df(title_principals_path)
-snake_case_title_principals_df = change_column_names_to_snake_case(title_principals_df)
-title_principals_df_with_nulls = null_from_string_to_none(snake_case_title_principals_df)
-title_principals_df_without_job_col = drop_job_column_in_title_principals(title_principals_df_with_nulls)
-title_principals_df_without_characters = drop_characters_column_in_title_principals(title_principals_df_without_job_col)
-title_principals_df_without_duplicates = delete_duplicates(title_principals_df_without_characters)
-write_dataframe_to_csv(title_principals_df_without_duplicates, title_principal_write_path)
+processed_title_principals_df = process_cols_title_principals(title_principals_df)
+cleaned_title_principals_df = clean_title_principals(processed_title_principals_df)
+write_dataframe_to_csv(cleaned_title_principals_df, title_principal_write_path)
 
 title_crew_df = read_title_crew_df(title_crew_path)
-snake_case_title_crew_df = change_column_names_to_snake_case(title_crew_df)
-title_crew_df_with_nulls = null_from_string_to_none(snake_case_title_crew_df)
-title_crew_df_with_directors_as_array = convert_directors_col_to_array(title_crew_df_with_nulls)
-title_crew_df_with_writers_as_array = convert_writers_col_to_array(title_crew_df_with_directors_as_array)
-title_crew_df_without_null_rows = drop_null_rows_in_title_crew(title_crew_df_with_writers_as_array)
-title_crew_df_without_duplicates = delete_duplicates(title_crew_df_without_null_rows)
-write_title_crew_to_csv(title_crew_df_without_duplicates, title_crew_write_path)
+processed_title_crew = process_cols_title_crew(title_crew_df)
+cleaned_title_crew = clean_title_crew(processed_title_crew)
+write_title_crew_to_csv(cleaned_title_crew, title_crew_write_path)
 
 title_ratings_df = read_title_ratings_df(title_ratings_path)
 snake_case_title_ratings_df = change_column_names_to_snake_case(title_ratings_df)
 title_ratings_df_without_duplicates = delete_duplicates(snake_case_title_ratings_df)
 write_dataframe_to_csv(title_ratings_df_without_duplicates, title_ratings_write_path)
 
-
 #filtering
+business_questions_shvets(name_basics_df_without_duplicates, title_basics_df_without_duplicates)
 business_questions_rechkalova(name_basics_df_without_duplicates, title_akas_without_duplicates)
