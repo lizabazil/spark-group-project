@@ -108,6 +108,7 @@ def business_questions_tretiak(title_basics_df):
 
     titles_with_3_genres_df = get_titles_with_3_genres(title_basics_df)
     write_title_basics_to_csv(titles_with_3_genres_df, 'data/results/question_14')
+    return None
 
     
 def process_cols_title_principals(title_principals):
@@ -183,6 +184,7 @@ def business_questions_shvets(name_basics, title_basics):
 
     dramas_with_more_than_70_mins_runtime = get_dramas_with_more_than_70_mins_runtime(title_basics)
     write_title_basics_to_csv(dramas_with_more_than_70_mins_runtime, 'data/results/question_20')
+    return None
 
     
 def processing_cols_title_akas(title_akas):
