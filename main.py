@@ -12,6 +12,7 @@ from process.common_functions import change_column_names_to_snake_case, null_fro
 from process.process_title_akas import (make_types_col_array_type, make_attribute_col_array_type,
                                         make_is_original_title_col_boolean_type)
 from cleaning import *
+from filtering.filtering_Shvets import *
 
 
 def dealing_with_null_columns_name_basics(name_basics_df):
@@ -139,6 +140,26 @@ def clean_title_crew(title_crew):
     return title_crew_df_without_duplicates
 
 
+def business_questions_shvets(name_basics, title_basics):
+    """
+    Finds answers to business questions 18-20 and writes results to csv files.
+    Args:
+        name_basics (dataframe): name_basics dataframe
+        title_basics (dataframe): title_basics dataframe
+    Returns:
+        None
+    """
+    directors_not_producers = get_directors_not_producers(name_basics)
+    write_name_basics_to_csv(directors_not_producers, 'data/results/question_18')
+
+    people_with_only_2_professions = get_people_with_only_2_professions(name_basics)
+    write_name_basics_to_csv(people_with_only_2_professions, 'data/results/question_19')
+
+    dramas_with_more_than_70_mins_runtime = get_dramas_with_more_than_70_mins_runtime(title_basics)
+    write_title_basics_to_csv(dramas_with_more_than_70_mins_runtime, 'data/results/question_20')
+    return None
+
+
 # df2 = basic_test_df2()
 # df2.show()
 
@@ -200,3 +221,5 @@ title_ratings_df = read_title_ratings_df(title_ratings_path)
 snake_case_title_ratings_df = change_column_names_to_snake_case(title_ratings_df)
 title_ratings_df_without_duplicates = delete_duplicates(snake_case_title_ratings_df)
 write_dataframe_to_csv(title_ratings_df_without_duplicates, title_ratings_write_path)
+
+business_questions_shvets(name_basics_df_without_duplicates, title_basics_df_without_duplicates)
