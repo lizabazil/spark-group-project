@@ -35,6 +35,25 @@ def average_release_year_by_type(df):
     avg_release_year_by_type = (df
                                 .filter(f.col(start_year).isNotNull())
                                 .groupBy(title_type)
-                                .agg(f.round(f.avg(start_year).alias("average_release_year")))
+                                .agg(f.round(f.avg(start_year)).alias("average_release_year"))
                                 )
     return avg_release_year_by_type
+
+
+def tvmovies_per_year_after_1990(df):
+    """
+    8. What is the number of movies made every year after 1990, only of the "tvMovie" type?
+
+    Args:
+        df (dataframe): The title_basics dataframe.
+
+    Returns:
+        dataframe: New dataframe with two columns: start_year and count.
+    """
+    tvmovies_per_year = (df
+                         .filter((f.col(start_year) > 1990) & (f.col(title_type) == "tvMovie"))
+                         .groupBy(start_year)
+                         .count()
+                         .orderBy(start_year)
+                         )
+    return tvmovies_per_year
