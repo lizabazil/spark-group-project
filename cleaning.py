@@ -171,3 +171,17 @@ def delete_duplicates(df):
     """
     df = df.dropDuplicates()
     return df
+
+
+def edit_anomaly_col_year_in_title_basics(title_basics_df):
+    """
+    Edit columns start_year and end_year in title.basics dataframe. If column year > 2024, change its value to 2024
+    (as it is the closest normal value for year).
+    Args:
+        title_basics_df (pyspark dataframe): dataframe title.basics
+    Returns:
+        (pyspark dataframe): modified dataframe title.basics
+    """
+    df = title_basics_df.withColumn(start_year, f.when(f.col(start_year) > 2024, 2024).otherwise(f.col(start_year)))
+    df = df.withColumn(end_year, f.when(f.col(end_year) > 2024, 2024).otherwise(f.col(end_year)))
+    return df
