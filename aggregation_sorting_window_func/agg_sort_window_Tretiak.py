@@ -1,5 +1,6 @@
 from columns import *
 import pyspark.sql.functions as f
+from pyspark.sql.window import Window
 
 
 def longest_runtime_time_per_title_type(title_basics_df):
@@ -51,3 +52,23 @@ def amount_adult_and_non_adult_titles_per_title_type(title_basics_df):
     amount_adult_and_not_adult_per_title_type_df = title_basics_df.groupBy(title_type, is_adult).count()
     ordered_df = amount_adult_and_not_adult_per_title_type_df.orderBy([title_type, is_adult], ascending=[True, False])
     return ordered_df
+
+
+def change_of_titles_amount_from_prev_year(title_basics_df):
+    """
+    Get the change of the amount of titles from the previous year for each title type.
+
+    Args:
+        title_basics_df (pyspark DataFrame): DataFrame title.basics
+    Returns:
+        (pyspark DataFrame): DataFrame with the change of the amount of titles from the previous year.
+    """
+    # filter rows, where column start_year is not null
+    col_start_year_not_null_df = title_basics_df.filter(~f.col(start_year).isNull())
+    with_amount_of_titles_per_year_df = col_start_year_not_null_df.groupBy(start_year, title_type).count()
+
+    window = Window.partitionBy(title_type).orderBy(start_year)
+    # add column with the amount of titles from the previous year
+    df = with_amount_of_titles_per_year_df.withColumn('prev_year_count', f.lag('count').over(window))
+    df = df.withColumn('title_amount_change', f.col('count') - f.col('prev_year_count'))
+    return df
