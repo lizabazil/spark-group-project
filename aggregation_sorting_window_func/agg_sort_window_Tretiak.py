@@ -72,3 +72,19 @@ def change_of_titles_amount_from_prev_year(title_basics_df):
     df = with_amount_of_titles_per_year_df.withColumn('prev_year_count', f.lag('count').over(window))
     df = df.withColumn('title_amount_change', f.col('count') - f.col('prev_year_count'))
     return df
+
+
+def top_10_percent_titles_with_longest_runtime_per_type(title_basics_df):
+    """
+    Get the top 10% titles with the longest runtime time per title type.
+
+    Args:
+        title_basics_df (pyspark DataFrame): DataFrame title.basics
+    Returns:
+        (pyspark DataFrame): DataFrame with the top 10% titles with the longest runtime time per title type.
+    """
+    window_spec = Window.partitionBy(title_type).orderBy(runtime_minutes)
+    df = title_basics_df.withColumn('cume_dist', f.cume_dist().over(window_spec))
+    df = df.filter(f.col('cume_dist') >= 0.9)
+    return df
+
