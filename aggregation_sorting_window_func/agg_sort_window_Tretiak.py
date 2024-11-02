@@ -37,3 +37,17 @@ def amount_of_non_adult_titles_each_type_every_year(title_basics_df):
     ordered_df = amount_titles_by_year_and_title_type_df.orderBy([title_type, start_year],
                                                                  ascending=[True, False])
     return ordered_df
+
+
+def amount_adult_and_non_adult_titles_per_title_type(title_basics_df):
+    """
+    Get the amount of adult and non-adult titles per title type.
+
+    Args:
+        title_basics_df (pyspark DataFrame): DataFrame title.basics
+    Returns:
+        (pyspark DataFrame): DataFrame with the amount of adult and non-adult titles per title type.
+    """
+    amount_adult_and_not_adult_per_title_type_df = title_basics_df.groupBy(title_type, is_adult).count()
+    ordered_df = amount_adult_and_not_adult_per_title_type_df.orderBy([title_type, is_adult], ascending=[True, False])
+    return ordered_df
