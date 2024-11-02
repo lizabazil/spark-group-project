@@ -56,7 +56,7 @@ def amount_adult_and_non_adult_titles_per_title_type(title_basics_df):
 
 def change_of_titles_amount_from_prev_year(title_basics_df):
     """
-    Get the change of the amount of titles from the previous year for each title type.
+    Determine the change in the number of titles each year compared to the previous year, broken down by title type.
 
     Args:
         title_basics_df (pyspark DataFrame): DataFrame title.basics
