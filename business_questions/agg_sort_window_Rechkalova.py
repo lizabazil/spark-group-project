@@ -1,5 +1,7 @@
 import pyspark.sql.functions as f
-from columns import runtime_minutes, genres, start_year, title_type
+from pyspark.sql import Window
+
+from columns import runtime_minutes, genres, start_year, title_type, original_title, tconst, region, title
 
 
 def predominant_genres_of_movies_over_120_minutes(df):
@@ -57,3 +59,20 @@ def tvmovies_per_year_after_1990(df):
                          .orderBy(start_year)
                          )
     return tvmovies_per_year
+
+
+def average_runtime_for_every_type(df):
+    """
+    9. What is the average runtime for every tvType?
+
+    Args:
+        df (dataframe): The title_basics dataframe.
+
+    Returns:
+        dataframe: New dataframe with two columns: title_type and average_runtime.
+    """
+    window = Window.partitionBy(title_type)
+    average_runtime_df = (df
+                          .withColumn("average_runtime", f.avg(runtime_minutes).over(window))
+                          .select(title_type, "average_runtime").distinct())
+    return average_runtime_df
