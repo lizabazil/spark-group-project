@@ -27,6 +27,7 @@ from business_questions.agg_sort_window_Rechkalova import (predominant_genres_of
                                                            tvmovies_per_year_after_1990,
                                                            average_runtime_for_every_type,
                                                            top_5_the_longest_drama_films_after_2000)
+from business_questions.agg_sort_window_Shvets import *
 
 
 def dealing_with_null_columns_name_basics(name_basics_df):
@@ -194,15 +195,18 @@ def clean_title_crew(title_crew):
     return title_crew_df_without_duplicates
 
 
-def business_questions_shvets(name_basics, title_basics):
+def business_questions_shvets(name_basics, title_basics, title_akas):
     """
-    Finds answers to business questions 18-20 and writes results to csv files.
+    Finds answers to business questions 11, 18-24 and writes results to csv files.
     Args:
         name_basics (dataframe): name_basics dataframe
         title_basics (dataframe): title_basics dataframe
     Returns:
         None
     """
+    top_10_professions_by_number_of_people_df = top_10_professions_by_number_of_people(name_basics)
+    write_dataframe_to_csv(top_10_professions_by_number_of_people_df, 'data/results/question_11')
+
     directors_not_producers = get_directors_not_producers(name_basics)
     write_name_basics_to_csv(directors_not_producers, 'data/results/question_18')
 
@@ -211,6 +215,18 @@ def business_questions_shvets(name_basics, title_basics):
 
     dramas_with_more_than_70_mins_runtime = get_dramas_with_more_than_70_mins_runtime(title_basics)
     write_title_basics_to_csv(dramas_with_more_than_70_mins_runtime, 'data/results/question_20')
+
+    average_runtime_per_genre_df = average_runtime_per_genre(title_basics)
+    write_dataframe_to_csv(average_runtime_per_genre_df, 'data/results/question_21')
+
+    animated_fantasy_decades = animated_fantasy_films_count_per_decade(title_basics)
+    write_dataframe_to_csv(animated_fantasy_decades, 'data/results/question_22')
+
+    top_3_long_runtime_titles_per_decade_df = top_3_long_runtime_titles_per_decade(title_basics)
+    write_dataframe_to_csv(top_3_long_runtime_titles_per_decade_df, 'data/results/question_23')
+
+    analyze_title_length_for_each_lang_df = analyze_title_length_for_each_lang(title_akas)
+    write_dataframe_to_csv(analyze_title_length_for_each_lang_df, 'data/results/question_24')
     return None
 
 
@@ -344,6 +360,7 @@ title_ratings_df_without_duplicates = delete_duplicates(snake_case_title_ratings
 write_dataframe_to_csv(title_ratings_df_without_duplicates, title_ratings_write_path)
 
 # business_questions
-business_questions_shvets(name_basics_df_without_duplicates, title_basics_df_without_duplicates)
+business_questions_shvets(name_basics_df_without_duplicates, title_basics_df_without_duplicates,
+                          title_akas_without_duplicates)
 business_questions_rechkalova(name_basics_df_without_duplicates, title_akas_without_duplicates)
 business_questions_tretiak(title_basics_df_without_duplicates)
