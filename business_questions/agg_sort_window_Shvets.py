@@ -1,6 +1,7 @@
 import pyspark.sql.functions as f
 from pyspark.sql import Window
-from columns import primary_profession, id_person, genres, runtime_minutes, start_year, original_title
+
+from columns import primary_profession, id_person, genres, runtime_minutes, start_year, original_title, language, title
 
 
 def top_10_professions_by_number_of_people(name_basics):
@@ -79,3 +80,27 @@ def top_3_long_runtime_titles_per_decade(title_basics):
                                .select(decade, original_title, runtime_minutes, rank)
                                .filter((f.col(rank) <= 3)))
     return top_long_runtime_titles
+
+
+def analyze_title_length_for_each_lang(title_akas):
+    """
+    24. Find longest and shortest title length, mode of lengths and its percent rank for each language
+    Args:
+        title_akas: The title_akas dataframe.
+    Returns:
+        result: dataframe with 5 columns: language, max_length, min_length, mode_length, mode_percent_rank
+    """
+    length = 'length'
+    mode_length = 'mode_length'
+    mode_length_window = Window.orderBy(mode_length)
+    result = (title_akas
+              .filter(f.col(language) != "unknown")
+              .withColumn(length, f.length(title))
+              .groupBy(language)
+              .agg(f.max(length).alias("max_length"),
+                   f.min(length).alias("min_length"),
+                   f.expr("mode(length)").alias(mode_length))
+              .withColumn("mode_percent_rank",
+                          f.round(f.percent_rank().over(mode_length_window), 2))
+              .orderBy(language))
+    return result
