@@ -12,13 +12,17 @@ from process.common_functions import change_column_names_to_snake_case, null_fro
 from process.process_title_akas import (make_types_col_array_type, make_attribute_col_array_type,
                                         make_is_original_title_col_boolean_type)
 from cleaning import *
-from filtering.filtering_Tretiak import (get_titles_made_between_1950_and_1960, get_titles_of_short_comedies,
-                                         get_titles_with_3_genres)
-from filtering.filtering_Shvets import *
-from filtering.filtering_Rechkalova import (actors_or_actresses_and_directors_at_the_same_time,
-                                            people_who_are_known_for_one_title_movie,
-                                            titles_with_ukrainian_translation)
-
+from business_questions.filtering_Tretiak import (get_titles_made_between_1950_and_1960, get_titles_of_short_comedies,
+                                                  get_titles_with_3_genres)
+from business_questions.filtering_Shvets import *
+from business_questions.filtering_Rechkalova import (actors_or_actresses_and_directors_at_the_same_time,
+                                                     people_who_are_known_for_one_title_movie,
+                                                     titles_with_ukrainian_translation)
+from business_questions.agg_sort_window_Rechkalova import (predominant_genres_of_movies_over_120_minutes,
+                                                           average_release_year_by_type,
+                                                           tvmovies_per_year_after_1990,
+                                                           average_runtime_for_every_type,
+                                                           top_5_the_longest_drama_films_after_2000)
 
 
 def dealing_with_null_columns_name_basics(name_basics_df):
@@ -110,7 +114,7 @@ def business_questions_tretiak(title_basics_df):
     write_title_basics_to_csv(titles_with_3_genres_df, 'data/results/question_14')
     return None
 
-    
+
 def process_cols_title_principals(title_principals):
     """
     Processes title_principals dataframe (change to snake case, types)
@@ -186,7 +190,7 @@ def business_questions_shvets(name_basics, title_basics):
     write_title_basics_to_csv(dramas_with_more_than_70_mins_runtime, 'data/results/question_20')
     return None
 
-    
+
 def processing_cols_title_akas(title_akas):
     """
     To process title.akas dataframe (change to snake case, types etc)
@@ -223,7 +227,7 @@ def dealing_with_null_columns_title_akas(title_akas):
 
 def business_questions_rechkalova(df_name_basics, df_title_akas):
     """
-    Questions 15-17 from README. Writing results to a csv file.
+    Questions 6-10 and 15-17 from README. Writing results to a csv file.
 
     Args:
          df_name_basics (dataframe): name.basics dataframe.
@@ -232,6 +236,21 @@ def business_questions_rechkalova(df_name_basics, df_title_akas):
     Returns:
         None
     """
+    # 6
+    df_predominant_genres = predominant_genres_of_movies_over_120_minutes(df_title_akas)
+    write_dataframe_to_csv(df_predominant_genres, question_6)
+    # 7
+    df_average_release_year_by_type = average_release_year_by_type(df_title_akas)
+    write_dataframe_to_csv(df_average_release_year_by_type, question_7)
+    # 8
+    df_tvmovies_per_year_after_1990 = tvmovies_per_year_after_1990(df_title_akas)
+    write_dataframe_to_csv(df_tvmovies_per_year_after_1990, question_8)
+    # 9
+    df_average_runtime_for_every_type = average_runtime_for_every_type(df_title_akas)
+    write_dataframe_to_csv(df_average_runtime_for_every_type, question_9)
+    # 10
+    df_top_5_the_longest_drama = top_5_the_longest_drama_films_after_2000(df_title_akas)
+    write_dataframe_to_csv(df_top_5_the_longest_drama, question_10)
     # 15
     df_actors_or_actresses_and_directors = actors_or_actresses_and_directors_at_the_same_time(df_name_basics)
     write_name_basics_to_csv(df_actors_or_actresses_and_directors, question_15)
@@ -301,7 +320,7 @@ snake_case_title_ratings_df = change_column_names_to_snake_case(title_ratings_df
 title_ratings_df_without_duplicates = delete_duplicates(snake_case_title_ratings_df)
 write_dataframe_to_csv(title_ratings_df_without_duplicates, title_ratings_write_path)
 
-#filtering
+# business_questions
 business_questions_shvets(name_basics_df_without_duplicates, title_basics_df_without_duplicates)
 business_questions_rechkalova(name_basics_df_without_duplicates, title_akas_without_duplicates)
 business_questions_tretiak(title_basics_df_without_duplicates)
