@@ -1,6 +1,3 @@
-from basic_dfs.basic_df_Rechkalova import basic_test_df as basic_test_df2
-from basic_dfs.basic_df_Shvets import basic_test_df as basic_test_df3
-from basic_dfs.basic_df_Tretiak import basic_test_df as basic_test_df1
 from io_h import *
 from setting import *
 from process.process_title_basics import make_genres_array_type, convert_is_adult_col_to_boolean_type
@@ -12,12 +9,19 @@ from process.common_functions import change_column_names_to_snake_case, null_fro
 from process.process_title_akas import (make_types_col_array_type, make_attribute_col_array_type,
                                         make_is_original_title_col_boolean_type)
 from cleaning import *
-from business_questions.filtering_Tretiak import (get_titles_made_between_1950_and_1960, get_titles_of_short_comedies,
-                                                  get_titles_with_3_genres)
 from business_questions.filtering_Shvets import *
 from business_questions.filtering_Rechkalova import (actors_or_actresses_and_directors_at_the_same_time,
                                                      people_who_are_known_for_one_title_movie,
                                                      titles_with_ukrainian_translation)
+from business_questions.filtering_Tretiak import (get_titles_made_between_1950_and_1960,
+                                                  get_titles_of_short_comedies,
+                                                  get_titles_with_3_genres,
+                                                  )
+from business_questions.agg_sort_window_Tretiak import (longest_runtime_time_per_title_type,
+                                                        amount_of_non_adult_titles_each_type_every_year,
+                                                        amount_adult_and_non_adult_titles_per_title_type,
+                                                        change_of_titles_amount_from_prev_year,
+                                                        top_10_percent_titles_with_longest_runtime_per_type)
 from business_questions.agg_sort_window_Rechkalova import (predominant_genres_of_movies_over_120_minutes,
                                                            average_release_year_by_type,
                                                            tvmovies_per_year_after_1990,
@@ -78,7 +82,8 @@ def processing_cols_name_basics(name_basics_df):
 
 def processing_cols_title_basics(title_basics_dataframe):
     """
-    To perform operations on processing columns in title.basics dataframe (such as changing columns types and names)
+    To perform operations on processing columns in title.basics dataframe (such as changing columns types and names;
+    getting rid of anomalies)
 
     Args:
         title_basics_dataframe (pyspark dataframe): title.basics dataframe
@@ -91,12 +96,13 @@ def processing_cols_title_basics(title_basics_dataframe):
     title_basics_genres_col_modified_df = make_genres_array_type(title_basics_to_snake_case_df)
 
     convert_is_adult_col_to_bool_df = convert_is_adult_col_to_boolean_type(title_basics_genres_col_modified_df)
-    return convert_is_adult_col_to_bool_df
+    edit_anomaly_cols_year_df = edit_anomaly_col_year_in_title_basics(convert_is_adult_col_to_bool_df)
+    return edit_anomaly_cols_year_df
 
 
 def business_questions_tretiak(title_basics_df):
     """
-    To answer business questions # 12-14 and write result dataframes to csv files.
+    To answer business questions # 1-5, 12-14 and write result dataframes to csv files.
 
     Args:
         title_basics_df (pyspark dataframe): title.basics dataframe
@@ -112,6 +118,23 @@ def business_questions_tretiak(title_basics_df):
 
     titles_with_3_genres_df = get_titles_with_3_genres(title_basics_df)
     write_title_basics_to_csv(titles_with_3_genres_df, 'data/results/question_14')
+
+    longest_runtime_per_title_type_df = longest_runtime_time_per_title_type(title_basics_df)
+    write_dataframe_to_csv(longest_runtime_per_title_type_df, 'data/results/question_1')
+
+    amount_of_non_adult_titles_each_type_every_year_df = amount_of_non_adult_titles_each_type_every_year(
+        title_basics_df)
+    write_dataframe_to_csv(amount_of_non_adult_titles_each_type_every_year_df, 'data/results/question_2')
+
+    amount_of_adult_and_non_adult_per_title_type_df = amount_adult_and_non_adult_titles_per_title_type(title_basics_df)
+    write_dataframe_to_csv(amount_of_adult_and_non_adult_per_title_type_df, 'data/results/question_3')
+
+    change_of_titles_amount_from_prev_year_df = change_of_titles_amount_from_prev_year(title_basics_df)
+    write_dataframe_to_csv(change_of_titles_amount_from_prev_year_df, 'data/results/question_4')
+
+    top_10_percent_titles_with_longest_runtime_per_type_df = top_10_percent_titles_with_longest_runtime_per_type(
+        title_basics_df)
+    write_title_basics_to_csv(top_10_percent_titles_with_longest_runtime_per_type_df, 'data/results/question_5')
     return None
 
 
