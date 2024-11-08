@@ -185,3 +185,17 @@ def edit_anomaly_col_year_in_title_basics(title_basics_df):
     df = title_basics_df.withColumn(start_year, f.when(f.col(start_year) > 2024, 2024).otherwise(f.col(start_year)))
     df = df.withColumn(end_year, f.when(f.col(end_year) > 2024, 2024).otherwise(f.col(end_year)))
     return df
+
+
+def drop_rows_with_incorrect_years_in_title_basics(title_basics_df):
+    """
+    Drop rows where start_year < 1888 and where end_year < 1888 in title.basics dataframe.
+    1888 is the year when the first movie was made.
+
+    Args:
+        title_basics_df (pyspark dataframe): dataframe title.basics
+    Returns:
+        (pyspark dataframe): modified dataframe title.basics
+    """
+    filtered_df = title_basics_df.filter((f.col(start_year) >= 1888) & (f.col(end_year) >= 1888))
+    return filtered_df
