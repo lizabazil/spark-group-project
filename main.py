@@ -28,6 +28,8 @@ from business_questions.agg_sort_window_Rechkalova import (predominant_genres_of
                                                            average_runtime_for_every_type,
                                                            top_5_the_longest_drama_films_after_2000)
 from business_questions.agg_sort_window_Shvets import *
+from business_questions.joins_Tretiak import (average_rating_for_horror_and_drama_titles_with_min_votes,
+                                              producers_worked_min_three_comedies_in_specified_period)
 
 
 def dealing_with_null_columns_name_basics(name_basics_df):
@@ -102,12 +104,15 @@ def processing_cols_title_basics(title_basics_dataframe):
     return dropped_rows_with_incorrect_year_df
 
 
-def business_questions_tretiak(title_basics_df):
+def business_questions_tretiak(title_basics_df, title_ratings_df, name_basics_df, title_principals_df):
     """
     To answer business questions # 1-5, 12-14 and write result dataframes to csv files.
 
     Args:
         title_basics_df (pyspark dataframe): title.basics dataframe
+        title_ratings_df (pyspark dataframe): title.ratings dataframe
+        name_basics_df (pyspark dataframe): name.basics dataframe
+        title_principals_df (pyspark dataframe): title.principals dataframe
 
     Returns:
         None
@@ -137,6 +142,15 @@ def business_questions_tretiak(title_basics_df):
     top_10_percent_titles_with_longest_runtime_per_type_df = top_ten_percent_titles_with_longest_runtime_per_type(
         title_basics_df)
     write_title_basics_to_csv(top_10_percent_titles_with_longest_runtime_per_type_df, 'data/results/question_5')
+
+    average_rating_for_horror_and_drama_titles_with_min_votes_df = average_rating_for_horror_and_drama_titles_with_min_votes(
+        title_ratings_df, title_basics_df)
+    write_title_basics_to_csv(average_rating_for_horror_and_drama_titles_with_min_votes_df, 'data/results/question_25')
+
+    producers_worked_min_three_comedies_df = producers_worked_min_three_comedies_in_specified_period(title_basics_df,
+                                                                                                     name_basics_df,
+                                                                                                     title_principals_df)
+    write_dataframe_to_csv(producers_worked_min_three_comedies_df, 'data/results/question_26')
     return None
 
 
@@ -364,4 +378,5 @@ write_dataframe_to_csv(title_ratings_df_without_duplicates, title_ratings_write_
 business_questions_shvets(name_basics_df_without_duplicates, title_basics_df_without_duplicates,
                           title_akas_without_duplicates)
 business_questions_rechkalova(name_basics_df_without_duplicates, title_akas_without_duplicates)
-business_questions_tretiak(title_basics_df_without_duplicates)
+business_questions_tretiak(title_basics_df_without_duplicates, title_ratings_df_without_duplicates,
+                           name_basics_df_without_duplicates, cleaned_title_principals_df)
