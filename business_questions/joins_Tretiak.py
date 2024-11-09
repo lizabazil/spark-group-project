@@ -14,11 +14,18 @@ def average_rating_for_horror_and_drama_titles_with_min_votes(title_ratings_df, 
         votes.
     """
     filtered_ratings_with_min_votes_df = title_ratings_df.filter(f.col(num_votes) >= 1000)
-    join_condition = (title_ratings_df[tconst] == title_basics_df[tconst]) & \
+    join_condition = (filtered_ratings_with_min_votes_df[tconst] == title_basics_df[tconst]) & \
                      (f.array_contains(title_basics_df[genres], 'Horror') |
                       f.array_contains(title_basics_df[genres], 'Drama'))
+
     joined_df = filtered_ratings_with_min_votes_df.join(title_basics_df, join_condition, 'right')
-    return joined_df
+
+    selected_cols_df = joined_df.select(title_basics_df[tconst], title_basics_df[title_type],
+                                        title_basics_df[original_title], title_basics_df[start_year],
+                                        filtered_ratings_with_min_votes_df[average_rating],
+                                        filtered_ratings_with_min_votes_df[num_votes],
+                                        title_basics_df[genres])
+    return selected_cols_df
 
 
 def producers_worked_min_three_comedies_in_specified_period(title_basics_df, name_basics_df, title_principals_df):
@@ -59,7 +66,9 @@ def producers_worked_min_three_comedies_in_specified_period(title_basics_df, nam
     join_condition = min_three_comedies_for_writer_df[nconst] == name_basics_only_writers_df[id_person]
     result_df = min_three_comedies_for_writer_df.join(name_basics_only_writers_df, join_condition, 'inner')
 
-    ordered_by_nconst_df = (result_df.orderBy(f.col(nconst)).
-                            select(nconst, primary_name,
-                                   alias_for_count))
-    return ordered_by_nconst_df
+    ordered_by_nconst_df = result_df.orderBy(f.col(nconst))
+    selected_cols_df = ordered_by_nconst_df.select(
+        min_three_comedies_for_writer_df[nconst],
+        name_basics_only_writers_df[primary_name],
+        min_three_comedies_for_writer_df[alias_for_count])
+    return selected_cols_df
