@@ -1,5 +1,6 @@
 import pyspark.sql.functions as f
-from columns import region, directors, tconst, primary_name, title_id, id_person
+from columns import (region, directors, tconst, primary_name, title_id, id_person, title_type, start_year,
+                     original_title, average_rating, num_votes)
 
 
 def directors_with_projects_in_different_regions(title_akas, name_basics, title_crew):
@@ -38,3 +39,27 @@ def directors_with_projects_in_different_regions(title_akas, name_basics, title_
                             .orderBy(f.col(unique_regions_count).desc()))
 
     return directors_with_names
+
+
+def most_rated_short_movies(title_basics, title_ratings):
+    """
+    28. Which films receive the highest ratings in the short category in 1980 - 2000 years?
+
+    Args:
+        title_basics (dataframe): The dataframe with full information about each movie.
+        title_ratings (dataframe): The dataframe with ratings and numbers of voting.
+
+    Returns:
+        dataframe: New dataframe with top-rated short movies in 1980 - 2000 years.
+    """
+    short_films = (title_basics.filter((f.col(title_type) == "short") &
+                                       (f.col(start_year).between(1980, 2000)))
+                   .select(tconst, original_title, start_year))
+
+    short_films_with_ratings = (short_films.join(title_ratings,
+                                                 short_films["tconst"] == title_ratings["tconst"],
+                                                 how="left")).drop(title_ratings.tconst)
+
+    top_rated_short_films = short_films_with_ratings.orderBy(f.col(average_rating).desc(), f.col(num_votes).desc())
+
+    return top_rated_short_films
