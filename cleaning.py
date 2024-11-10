@@ -197,5 +197,5 @@ def drop_rows_with_incorrect_years_in_title_basics(title_basics_df):
     Returns:
         (pyspark dataframe): modified dataframe title.basics
     """
-    filtered_df = title_basics_df.filter((f.col(start_year) >= 1888) & (f.col(end_year) >= 1888))
+    filtered_df = title_basics_df.filter(f.col(start_year) >= 1888)
     return filtered_df
