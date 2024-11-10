@@ -9,7 +9,10 @@ from process.common_functions import change_column_names_to_snake_case, null_fro
 from process.process_title_akas import (make_types_col_array_type, make_attribute_col_array_type,
                                         make_is_original_title_col_boolean_type)
 from cleaning import *
-from business_questions.filtering_Shvets import *
+from business_questions.filtering_Shvets import (get_directors_not_producers,
+                                                 get_people_with_only_two_professions,
+                                                 get_dramas_with_more_than_seventy_mins_runtime)
+
 from business_questions.filtering_Rechkalova import (actors_or_actresses_and_directors_at_the_same_time,
                                                      people_who_are_known_for_one_title_movie,
                                                      titles_with_ukrainian_translation)
@@ -27,7 +30,11 @@ from business_questions.agg_sort_window_Rechkalova import (predominant_genres_of
                                                            tvmovies_per_year_after_nineties,
                                                            average_runtime_for_every_type,
                                                            top_five_the_longest_drama_films_after_two_thousand)
-from business_questions.agg_sort_window_Shvets import *
+from business_questions.agg_sort_window_Shvets import (top_ten_professions_by_number_of_people,
+                                                       average_runtime_per_genre,
+                                                       animated_fantasy_films_count_per_decade,
+                                                       top_three_long_runtime_titles_per_decade,
+                                                       analyze_title_length_for_each_lang)
 from business_questions.joins_Tretiak import (average_rating_for_horror_and_drama_titles_with_min_votes,
                                               producers_worked_min_three_comedies_in_specified_period)
 from business_questions.joins_Rechkalova import directors_with_projects_in_different_regions, most_rated_short_movies
@@ -220,17 +227,17 @@ def business_questions_shvets(name_basics, title_basics, title_akas):
     Returns:
         None
     """
-    top_10_professions_by_number_of_people_df = top_10_professions_by_number_of_people(name_basics)
-    write_dataframe_to_csv(top_10_professions_by_number_of_people_df, 'data/results/question_11')
+    top_ten_professions_by_number_of_people_df = top_ten_professions_by_number_of_people(name_basics)
+    write_dataframe_to_csv(top_ten_professions_by_number_of_people_df, 'data/results/question_11')
 
     directors_not_producers = get_directors_not_producers(name_basics)
     write_name_basics_to_csv(directors_not_producers, 'data/results/question_18')
 
-    people_with_only_2_professions = get_people_with_only_2_professions(name_basics)
-    write_name_basics_to_csv(people_with_only_2_professions, 'data/results/question_19')
+    people_with_only_two_professions = get_people_with_only_two_professions(name_basics)
+    write_name_basics_to_csv(people_with_only_two_professions, 'data/results/question_19')
 
-    dramas_with_more_than_70_mins_runtime = get_dramas_with_more_than_70_mins_runtime(title_basics)
-    write_title_basics_to_csv(dramas_with_more_than_70_mins_runtime, 'data/results/question_20')
+    dramas_with_more_than_seventy_mins_runtime = get_dramas_with_more_than_seventy_mins_runtime(title_basics)
+    write_title_basics_to_csv(dramas_with_more_than_seventy_mins_runtime, 'data/results/question_20')
 
     average_runtime_per_genre_df = average_runtime_per_genre(title_basics)
     write_dataframe_to_csv(average_runtime_per_genre_df, 'data/results/question_21')
@@ -238,8 +245,8 @@ def business_questions_shvets(name_basics, title_basics, title_akas):
     animated_fantasy_decades = animated_fantasy_films_count_per_decade(title_basics)
     write_dataframe_to_csv(animated_fantasy_decades, 'data/results/question_22')
 
-    top_3_long_runtime_titles_per_decade_df = top_3_long_runtime_titles_per_decade(title_basics)
-    write_dataframe_to_csv(top_3_long_runtime_titles_per_decade_df, 'data/results/question_23')
+    top_three_long_runtime_titles_per_decade_df = top_three_long_runtime_titles_per_decade(title_basics)
+    write_dataframe_to_csv(top_three_long_runtime_titles_per_decade_df, 'data/results/question_23')
 
     analyze_title_length_for_each_lang_df = analyze_title_length_for_each_lang(title_akas)
     write_dataframe_to_csv(analyze_title_length_for_each_lang_df, 'data/results/question_24')

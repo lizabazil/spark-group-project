@@ -16,7 +16,7 @@ def get_directors_not_producers(df):
     return filtered_df
 
 
-def get_people_with_only_2_professions(df):
+def get_people_with_only_two_professions(df):
     """
     19. People, who have only top-2 professions.
     Args:
@@ -28,7 +28,7 @@ def get_people_with_only_2_professions(df):
     return filtered_df
 
 
-def get_dramas_with_more_than_70_mins_runtime(df):
+def get_dramas_with_more_than_seventy_mins_runtime(df):
     """
     20. Which movies have drama genre and runtime minutes more than 70.
     Args:
