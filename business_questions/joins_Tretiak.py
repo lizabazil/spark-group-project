@@ -28,7 +28,7 @@ def average_rating_for_horror_and_drama_titles_with_min_votes(title_ratings_df, 
     return selected_cols_df
 
 
-def producers_worked_min_three_comedies_in_specified_period(title_basics_df, name_basics_df, title_principals_df):
+def writers_worked_min_three_comedies_in_specified_period(title_basics_df, name_basics_df, title_principals_df):
     """
     Get the writers, who worked on at least 3 comedies between 1980 and 2010.
     Args:

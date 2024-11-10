@@ -12,9 +12,9 @@ def get_titles_made_in_specific_decade(title_basics_df):
     Returns:
         (pyspark DataFrame): filtered DataFrame with movies made between 1950 and 1960.
     """
-    titles_from_1950_to_1960_df = title_basics_df.filter((f.col(start_year) >= 1950) & (f.col(start_year) <= 1960)
+    titles_in_specified_decade_df = title_basics_df.filter((f.col(start_year) >= 1950) & (f.col(start_year) <= 1960)
                                                          & (f.col(end_year) <= 1960))
-    return titles_from_1950_to_1960_df
+    return titles_in_specified_decade_df
 
 
 def get_titles_of_short_comedies(title_basics_df):
@@ -43,5 +43,5 @@ def get_titles_with_three_genres(title_basics_df):
     Returns:
         (pyspark DataFrame): filtered DataFrame with titles, which have 3 genres
     """
-    titles_with_3_genres_df = title_basics_df.filter(f.size(f.col(genres)) == 3)
-    return titles_with_3_genres_df
+    titles_with_three_genres_df = title_basics_df.filter(f.size(f.col(genres)) == 3)
+    return titles_with_three_genres_df
