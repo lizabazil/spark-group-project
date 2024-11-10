@@ -313,19 +313,19 @@ def business_questions_rechkalova(df_name_basics, df_title_akas, dt_title_crew, 
         None
     """
     # 6
-    df_predominant_genres = predominant_genres_of_movies_over_one_twenty_minutes(df_title_akas)
+    df_predominant_genres = predominant_genres_of_movies_over_one_twenty_minutes(df_title_basics)
     write_dataframe_to_csv(df_predominant_genres, 'data/results/question_6')
     # 7
-    df_average_release_year_by_type = average_release_year_by_type(df_title_akas)
+    df_average_release_year_by_type = average_release_year_by_type(df_title_basics)
     write_dataframe_to_csv(df_average_release_year_by_type, 'data/results/question_7')
     # 8
-    df_tvmovies_per_year_after_nineties = tvmovies_per_year_after_nineties(df_title_akas)
+    df_tvmovies_per_year_after_nineties = tvmovies_per_year_after_nineties(df_title_basics)
     write_dataframe_to_csv(df_tvmovies_per_year_after_nineties, 'data/results/question_8')
     # 9
-    df_average_runtime_for_every_type = average_runtime_for_every_type(df_title_akas)
+    df_average_runtime_for_every_type = average_runtime_for_every_type(df_title_basics)
     write_dataframe_to_csv(df_average_runtime_for_every_type, 'data/results/question_9')
     # 10
-    df_top_five_the_longest_drama = top_five_the_longest_drama_films_after_two_thousand(df_title_akas)
+    df_top_five_the_longest_drama = top_five_the_longest_drama_films_after_two_thousand(df_title_basics)
     write_dataframe_to_csv(df_top_five_the_longest_drama, 'data/results/question_10')
     # 15
     df_actors_or_actresses_and_directors = actors_or_actresses_and_directors_at_the_same_time(df_name_basics)

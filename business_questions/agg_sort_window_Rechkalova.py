@@ -1,4 +1,5 @@
 import pyspark.sql.functions as f
+import pyspark.sql.types as t
 from pyspark.sql import Window
 
 from columns import (runtime_minutes, genres, start_year, title_type, original_title, tconst, region, ordering,
@@ -38,7 +39,7 @@ def average_release_year_by_type(df):
     avg_release_year_by_type = (df
                                 .filter(f.col(start_year).isNotNull())
                                 .groupBy(title_type)
-                                .agg(f.round(f.avg(start_year)).alias("average_release_year"))
+                                .agg(f.round(f.avg(start_year)).cast(t.IntegerType()).alias("average_release_year"))
                                 )
     return avg_release_year_by_type
 
