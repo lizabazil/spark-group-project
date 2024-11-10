@@ -5,7 +5,7 @@ from columns import (runtime_minutes, genres, start_year, title_type, original_t
                      title)
 
 
-def predominant_genres_of_movies_over_120_minutes(df):
+def predominant_genres_of_movies_over_one_twenty_minutes(df):
     """
     6. What are the predominant genres of movies over 120 minutes?
 
@@ -43,7 +43,7 @@ def average_release_year_by_type(df):
     return avg_release_year_by_type
 
 
-def tvmovies_per_year_after_1990(df):
+def tvmovies_per_year_after_nineties(df):
     """
     8. What is the number of movies made every year after 1990, only of the "tvMovie" type?
 
@@ -79,7 +79,7 @@ def average_runtime_for_every_type(df):
     return average_runtime_df
 
 
-def top_5_the_longest_drama_films_after_2000(df):
+def top_five_the_longest_drama_films_after_two_thousand(df):
     """
     What are the longest drama films from the year 2000 by title type,
     which fall within the top 5% of the longest films of their type?

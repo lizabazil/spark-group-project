@@ -22,14 +22,15 @@ from business_questions.agg_sort_window_Tretiak import (longest_runtime_time_per
                                                         amount_adult_and_non_adult_titles_per_title_type,
                                                         change_of_titles_amount_from_prev_year,
                                                         top_ten_percent_titles_with_longest_runtime_per_type)
-from business_questions.agg_sort_window_Rechkalova import (predominant_genres_of_movies_over_120_minutes,
+from business_questions.agg_sort_window_Rechkalova import (predominant_genres_of_movies_over_one_twenty_minutes,
                                                            average_release_year_by_type,
-                                                           tvmovies_per_year_after_1990,
+                                                           tvmovies_per_year_after_nineties,
                                                            average_runtime_for_every_type,
-                                                           top_5_the_longest_drama_films_after_2000)
+                                                           top_five_the_longest_drama_films_after_two_thousand)
 from business_questions.agg_sort_window_Shvets import *
 from business_questions.joins_Tretiak import (average_rating_for_horror_and_drama_titles_with_min_votes,
                                               producers_worked_min_three_comedies_in_specified_period)
+from business_questions.joins_Rechkalova import directors_with_projects_in_different_regions, most_rated_short_movies
 
 
 def dealing_with_null_columns_name_basics(name_basics_df):
@@ -279,9 +280,9 @@ def dealing_with_null_columns_title_akas(title_akas):
     return title_akas_fillna_region_language
 
 
-def business_questions_rechkalova(df_name_basics, df_title_akas):
+def business_questions_rechkalova(df_name_basics, df_title_akas, dt_title_crew, df_title_basics, df_title_ratings):
     """
-    Questions 6-10 and 15-17 from README. Writing results to a csv file.
+    Questions 6-10, 15-17 and 27-28 from README. Writing results to a csv file.
 
     Args:
          df_name_basics (dataframe): name.basics dataframe.
@@ -291,29 +292,36 @@ def business_questions_rechkalova(df_name_basics, df_title_akas):
         None
     """
     # 6
-    df_predominant_genres = predominant_genres_of_movies_over_120_minutes(df_title_akas)
-    write_dataframe_to_csv(df_predominant_genres, question_6)
+    df_predominant_genres = predominant_genres_of_movies_over_one_twenty_minutes(df_title_akas)
+    write_dataframe_to_csv(df_predominant_genres, 'data/results/question_6')
     # 7
     df_average_release_year_by_type = average_release_year_by_type(df_title_akas)
-    write_dataframe_to_csv(df_average_release_year_by_type, question_7)
+    write_dataframe_to_csv(df_average_release_year_by_type, 'data/results/question_7')
     # 8
-    df_tvmovies_per_year_after_1990 = tvmovies_per_year_after_1990(df_title_akas)
-    write_dataframe_to_csv(df_tvmovies_per_year_after_1990, question_8)
+    df_tvmovies_per_year_after_nineties = tvmovies_per_year_after_nineties(df_title_akas)
+    write_dataframe_to_csv(df_tvmovies_per_year_after_nineties, 'data/results/question_8')
     # 9
     df_average_runtime_for_every_type = average_runtime_for_every_type(df_title_akas)
-    write_dataframe_to_csv(df_average_runtime_for_every_type, question_9)
+    write_dataframe_to_csv(df_average_runtime_for_every_type, 'data/results/question_9')
     # 10
-    df_top_5_the_longest_drama = top_5_the_longest_drama_films_after_2000(df_title_akas)
-    write_dataframe_to_csv(df_top_5_the_longest_drama, question_10)
+    df_top_five_the_longest_drama = top_five_the_longest_drama_films_after_two_thousand(df_title_akas)
+    write_dataframe_to_csv(df_top_five_the_longest_drama, 'data/results/question_10')
     # 15
     df_actors_or_actresses_and_directors = actors_or_actresses_and_directors_at_the_same_time(df_name_basics)
-    write_name_basics_to_csv(df_actors_or_actresses_and_directors, question_15)
+    write_name_basics_to_csv(df_actors_or_actresses_and_directors, 'data/results/question_15')
     # 16
     df_people_with_one_title_movie = people_who_are_known_for_one_title_movie(df_name_basics)
-    write_name_basics_to_csv(df_people_with_one_title_movie, question_16)
+    write_name_basics_to_csv(df_people_with_one_title_movie, 'data/results/question_16')
     # 17
     df_titles_with_ukrainian_translation = titles_with_ukrainian_translation(df_title_akas)
-    write_dataframe_to_csv(df_titles_with_ukrainian_translation, question_17)
+    write_dataframe_to_csv(df_titles_with_ukrainian_translation, 'data/results/question_17')
+    # 27
+    df_directors_with_projects_in_regions = directors_with_projects_in_different_regions(df_title_akas,
+                                                                                         df_name_basics, dt_title_crew)
+    write_dataframe_to_csv(df_directors_with_projects_in_regions, 'data/results/question_27')
+    # 28
+    df_most_rated_short_movies = most_rated_short_movies(df_title_basics, df_title_ratings)
+    write_dataframe_to_csv(df_most_rated_short_movies, 'data/results/question_28')
     return None
 
 
@@ -342,7 +350,6 @@ after_dealing_with_null_cols_title_basics_df = dealing_with_null_columns_title_b
 title_basics_df_without_duplicates = delete_duplicates(after_dealing_with_null_cols_title_basics_df)
 write_title_basics_to_csv(title_basics_df_without_duplicates, title_basics_write_path)
 
-
 # title.akas.tsv
 df_title_akas = read_title_akas_df(title_akas_path)
 df_title_akas_process = processing_cols_title_akas(df_title_akas)
@@ -357,7 +364,6 @@ df_title_episode_without_n = null_from_string_to_none(df_snake_case_episode)
 df_episode_without_null_rows = drop_null_rows_episode(df_title_episode_without_n)
 df_episode_without_duplicates = delete_duplicates(df_episode_without_null_rows)
 write_dataframe_to_csv(df_episode_without_duplicates, title_episode_write_path)
-
 
 title_principals_df = read_title_principals_df(title_principals_path)
 processed_title_principals_df = process_cols_title_principals(title_principals_df)
@@ -377,6 +383,7 @@ write_dataframe_to_csv(title_ratings_df_without_duplicates, title_ratings_write_
 # business_questions
 business_questions_shvets(name_basics_df_without_duplicates, title_basics_df_without_duplicates,
                           title_akas_without_duplicates)
-business_questions_rechkalova(name_basics_df_without_duplicates, title_akas_without_duplicates)
 business_questions_tretiak(title_basics_df_without_duplicates, title_ratings_df_without_duplicates,
                            name_basics_df_without_duplicates, cleaned_title_principals_df)
+business_questions_rechkalova(name_basics_df_without_duplicates, title_akas_without_duplicates, cleaned_title_crew,
+                              title_basics_df_without_duplicates, title_ratings_df_without_duplicates)
