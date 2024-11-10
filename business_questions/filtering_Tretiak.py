@@ -2,7 +2,7 @@ import pyspark.sql.functions as f
 from columns import *
 
 
-def get_titles_made_between_1950_and_1960(title_basics_df):
+def get_titles_made_in_specific_decade(title_basics_df):
     """
     Return the movies made between 1950 and 1960 (including 1950 and 1960 years)
 
@@ -33,7 +33,7 @@ def get_titles_of_short_comedies(title_basics_df):
     return titles_of_short_comedy_films_df
 
 
-def get_titles_with_3_genres(title_basics_df):
+def get_titles_with_three_genres(title_basics_df):
     """
     Get the titles, which have 3 genres
 

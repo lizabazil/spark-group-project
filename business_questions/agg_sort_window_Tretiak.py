@@ -74,7 +74,7 @@ def change_of_titles_amount_from_prev_year(title_basics_df):
     return df
 
 
-def top_10_percent_titles_with_longest_runtime_per_type(title_basics_df):
+def top_ten_percent_titles_with_longest_runtime_per_type(title_basics_df):
     """
     Get the top 10% titles with the longest runtime time per title type.
 

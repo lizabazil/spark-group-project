@@ -13,21 +13,23 @@ from business_questions.filtering_Shvets import *
 from business_questions.filtering_Rechkalova import (actors_or_actresses_and_directors_at_the_same_time,
                                                      people_who_are_known_for_one_title_movie,
                                                      titles_with_ukrainian_translation)
-from business_questions.filtering_Tretiak import (get_titles_made_between_1950_and_1960,
+from business_questions.filtering_Tretiak import (get_titles_made_in_specific_decade,
                                                   get_titles_of_short_comedies,
-                                                  get_titles_with_3_genres,
+                                                  get_titles_with_three_genres,
                                                   )
 from business_questions.agg_sort_window_Tretiak import (longest_runtime_time_per_title_type,
                                                         amount_of_non_adult_titles_each_type_every_year,
                                                         amount_adult_and_non_adult_titles_per_title_type,
                                                         change_of_titles_amount_from_prev_year,
-                                                        top_10_percent_titles_with_longest_runtime_per_type)
+                                                        top_ten_percent_titles_with_longest_runtime_per_type)
 from business_questions.agg_sort_window_Rechkalova import (predominant_genres_of_movies_over_one_twenty_minutes,
                                                            average_release_year_by_type,
                                                            tvmovies_per_year_after_nineties,
                                                            average_runtime_for_every_type,
                                                            top_five_the_longest_drama_films_after_two_thousand)
 from business_questions.agg_sort_window_Shvets import *
+from business_questions.joins_Tretiak import (average_rating_for_horror_and_drama_titles_with_min_votes,
+                                              producers_worked_min_three_comedies_in_specified_period)
 from business_questions.joins_Rechkalova import directors_with_projects_in_different_regions, most_rated_short_movies
 
 
@@ -99,26 +101,30 @@ def processing_cols_title_basics(title_basics_dataframe):
 
     convert_is_adult_col_to_bool_df = convert_is_adult_col_to_boolean_type(title_basics_genres_col_modified_df)
     edit_anomaly_cols_year_df = edit_anomaly_col_year_in_title_basics(convert_is_adult_col_to_bool_df)
-    return edit_anomaly_cols_year_df
+    dropped_rows_with_incorrect_year_df = drop_rows_with_incorrect_years_in_title_basics(edit_anomaly_cols_year_df)
+    return dropped_rows_with_incorrect_year_df
 
 
-def business_questions_tretiak(title_basics_df):
+def business_questions_tretiak(title_basics_df, title_ratings_df, name_basics_df, title_principals_df):
     """
     To answer business questions # 1-5, 12-14 and write result dataframes to csv files.
 
     Args:
         title_basics_df (pyspark dataframe): title.basics dataframe
+        title_ratings_df (pyspark dataframe): title.ratings dataframe
+        name_basics_df (pyspark dataframe): name.basics dataframe
+        title_principals_df (pyspark dataframe): title.principals dataframe
 
     Returns:
         None
     """
-    titles_from_1950_to_1960_df = get_titles_made_between_1950_and_1960(title_basics_df)
+    titles_from_1950_to_1960_df = get_titles_made_in_specific_decade(title_basics_df)
     write_title_basics_to_csv(titles_from_1950_to_1960_df, 'data/results/question_12')
 
     titles_short_comedy_df = get_titles_of_short_comedies(title_basics_df)
     write_title_basics_to_csv(titles_short_comedy_df, 'data/results/question_13')
 
-    titles_with_3_genres_df = get_titles_with_3_genres(title_basics_df)
+    titles_with_3_genres_df = get_titles_with_three_genres(title_basics_df)
     write_title_basics_to_csv(titles_with_3_genres_df, 'data/results/question_14')
 
     longest_runtime_per_title_type_df = longest_runtime_time_per_title_type(title_basics_df)
@@ -134,9 +140,18 @@ def business_questions_tretiak(title_basics_df):
     change_of_titles_amount_from_prev_year_df = change_of_titles_amount_from_prev_year(title_basics_df)
     write_dataframe_to_csv(change_of_titles_amount_from_prev_year_df, 'data/results/question_4')
 
-    top_10_percent_titles_with_longest_runtime_per_type_df = top_10_percent_titles_with_longest_runtime_per_type(
+    top_10_percent_titles_with_longest_runtime_per_type_df = top_ten_percent_titles_with_longest_runtime_per_type(
         title_basics_df)
     write_title_basics_to_csv(top_10_percent_titles_with_longest_runtime_per_type_df, 'data/results/question_5')
+
+    average_rating_for_horror_and_drama_titles_with_min_votes_df = average_rating_for_horror_and_drama_titles_with_min_votes(
+        title_ratings_df, title_basics_df)
+    write_title_basics_to_csv(average_rating_for_horror_and_drama_titles_with_min_votes_df, 'data/results/question_25')
+
+    producers_worked_min_three_comedies_df = producers_worked_min_three_comedies_in_specified_period(title_basics_df,
+                                                                                                     name_basics_df,
+                                                                                                     title_principals_df)
+    write_dataframe_to_csv(producers_worked_min_three_comedies_df, 'data/results/question_26')
     return None
 
 
@@ -368,6 +383,7 @@ write_dataframe_to_csv(title_ratings_df_without_duplicates, title_ratings_write_
 # business_questions
 business_questions_shvets(name_basics_df_without_duplicates, title_basics_df_without_duplicates,
                           title_akas_without_duplicates)
+business_questions_tretiak(title_basics_df_without_duplicates, title_ratings_df_without_duplicates,
+                           name_basics_df_without_duplicates, cleaned_title_principals_df)
 business_questions_rechkalova(name_basics_df_without_duplicates, title_akas_without_duplicates, cleaned_title_crew,
                               title_basics_df_without_duplicates, title_ratings_df_without_duplicates)
-business_questions_tretiak(title_basics_df_without_duplicates)
