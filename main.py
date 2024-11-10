@@ -36,7 +36,7 @@ from business_questions.agg_sort_window_Shvets import (top_ten_professions_by_nu
                                                        top_three_long_runtime_titles_per_decade,
                                                        analyze_title_length_for_each_lang)
 from business_questions.joins_Tretiak import (average_rating_for_horror_and_drama_titles_with_min_votes,
-                                              producers_worked_min_three_comedies_in_specified_period)
+                                              writers_worked_min_three_comedies_in_specified_period)
 from business_questions.joins_Rechkalova import directors_with_projects_in_different_regions, most_rated_short_movies
 from business_questions.joins_Shvets import (get_genres_with_highest_rating,
                                              directors_highest_rated_action_movies_thousand_votes_since_twenty_fifteen)
@@ -127,14 +127,14 @@ def business_questions_tretiak(title_basics_df, title_ratings_df, name_basics_df
     Returns:
         None
     """
-    titles_from_1950_to_1960_df = get_titles_made_in_specific_decade(title_basics_df)
-    write_title_basics_to_csv(titles_from_1950_to_1960_df, 'data/results/question_12')
+    titles_in_specified_decade_df = get_titles_made_in_specific_decade(title_basics_df)
+    write_title_basics_to_csv(titles_in_specified_decade_df, 'data/results/question_12')
 
     titles_short_comedy_df = get_titles_of_short_comedies(title_basics_df)
     write_title_basics_to_csv(titles_short_comedy_df, 'data/results/question_13')
 
-    titles_with_3_genres_df = get_titles_with_three_genres(title_basics_df)
-    write_title_basics_to_csv(titles_with_3_genres_df, 'data/results/question_14')
+    titles_with_three_genres_df = get_titles_with_three_genres(title_basics_df)
+    write_title_basics_to_csv(titles_with_three_genres_df, 'data/results/question_14')
 
     longest_runtime_per_title_type_df = longest_runtime_time_per_title_type(title_basics_df)
     write_dataframe_to_csv(longest_runtime_per_title_type_df, 'data/results/question_1')
@@ -149,17 +149,17 @@ def business_questions_tretiak(title_basics_df, title_ratings_df, name_basics_df
     change_of_titles_amount_from_prev_year_df = change_of_titles_amount_from_prev_year(title_basics_df)
     write_dataframe_to_csv(change_of_titles_amount_from_prev_year_df, 'data/results/question_4')
 
-    top_10_percent_titles_with_longest_runtime_per_type_df = top_ten_percent_titles_with_longest_runtime_per_type(
+    top_ten_percent_titles_with_longest_runtime_per_type_df = top_ten_percent_titles_with_longest_runtime_per_type(
         title_basics_df)
-    write_title_basics_to_csv(top_10_percent_titles_with_longest_runtime_per_type_df, 'data/results/question_5')
+    write_title_basics_to_csv(top_ten_percent_titles_with_longest_runtime_per_type_df, 'data/results/question_5')
 
     average_rating_for_horror_and_drama_titles_with_min_votes_df = average_rating_for_horror_and_drama_titles_with_min_votes(
         title_ratings_df, title_basics_df)
     write_title_basics_to_csv(average_rating_for_horror_and_drama_titles_with_min_votes_df, 'data/results/question_25')
 
-    producers_worked_min_three_comedies_df = producers_worked_min_three_comedies_in_specified_period(title_basics_df,
-                                                                                                     name_basics_df,
-                                                                                                     title_principals_df)
+    producers_worked_min_three_comedies_df = writers_worked_min_three_comedies_in_specified_period(title_basics_df,
+                                                                                                   name_basics_df,
+                                                                                                   title_principals_df)
     write_dataframe_to_csv(producers_worked_min_three_comedies_df, 'data/results/question_26')
     return None
 
@@ -356,8 +356,8 @@ def business_questions_rechkalova(df_name_basics, df_title_akas, dt_title_crew, 
 # df1.show()
 
 # name.basics.tsv
-df1_name_basics = read_name_basics_df(name_basics_path)
-after_processing_name_basics_df = processing_cols_name_basics(df1_name_basics)
+name_basics_one_df = read_name_basics_df(name_basics_path)
+after_processing_name_basics_df = processing_cols_name_basics(name_basics_one_df)
 
 after_dealing_with_null_cols_df = dealing_with_null_columns_name_basics(after_processing_name_basics_df)
 name_basics_df_without_duplicates = delete_duplicates(after_dealing_with_null_cols_df)
