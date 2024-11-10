@@ -25,3 +25,11 @@ IMDB dataset:
 22. How many animated fantasy films were released in total each decade?
 23. Top 3 titles with the longest runtime for each decade.
 24. Find longest and shortest title length, mode of lengths and its percent rank for each language.
+25. Find writers who worked on at least three comedy titles between 1980 and 2010.
+26. Show average rating for horror and drama titles, which received at least 1000 votes.
+27. Which directors have projects with the most translations (regions)? 
+28. Which films receive the highest ratings in the short category in 1980 - 2000 years?
+29. Which genres have the highest average title rating?
+30. Which directors have worked on the highest-rated action movies with at least 1000 votes since 2015 or later?
+
+
