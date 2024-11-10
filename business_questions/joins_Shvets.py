@@ -38,11 +38,14 @@ def directors_highest_rated_action_movies_thousand_votes_since_twenty_fifteen(ti
     """
     genre = 'genre'
     director = 'director'
-    action_directors = (title_basics.filter(f.col(start_year) >= 2015)
+    title_basics_filtered = title_basics.filter(f.col(start_year) >= 2015)
+    title_ratings_filtered = title_ratings.filter(f.col(num_votes) >= 1000)
+    title_crew_filtered = title_crew.filter(f.col(directors).isNotNull())
+    action_directors = (title_basics_filtered
                         .withColumn(genre, f.explode(f.col(genres)))
                         .filter((f.col(genre) == 'Action') & (f.col(title_type) == 'movie'))
-                        .join(title_ratings.filter(f.col(num_votes) >= 1000), tconst, how='left')
-                        .join(title_crew.filter(f.col(directors).isNotNull()), tconst)
+                        .join(title_ratings_filtered, tconst, how='left')
+                        .join(title_crew_filtered, tconst)
                         .select(tconst, original_title, start_year, num_votes, average_rating, directors)
                         .withColumn(director, f.explode(f.col(directors))))
     action_directors = (action_directors
