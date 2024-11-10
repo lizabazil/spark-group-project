@@ -38,6 +38,8 @@ from business_questions.agg_sort_window_Shvets import (top_ten_professions_by_nu
 from business_questions.joins_Tretiak import (average_rating_for_horror_and_drama_titles_with_min_votes,
                                               producers_worked_min_three_comedies_in_specified_period)
 from business_questions.joins_Rechkalova import directors_with_projects_in_different_regions, most_rated_short_movies
+from business_questions.joins_Shvets import (get_genres_with_highest_rating,
+                                             directors_highest_rated_action_movies_thousand_votes_since_twenty_fifteen)
 
 
 def dealing_with_null_columns_name_basics(name_basics_df):
@@ -218,12 +220,15 @@ def clean_title_crew(title_crew):
     return title_crew_df_without_duplicates
 
 
-def business_questions_shvets(name_basics, title_basics, title_akas):
+def business_questions_shvets(name_basics, title_basics, title_akas, title_ratings, title_crew):
     """
-    Finds answers to business questions 11, 18-24 and writes results to csv files.
+    Finds answers to business questions 11, 18-24, 29-30 and writes results to csv files.
     Args:
         name_basics (dataframe): name_basics dataframe
         title_basics (dataframe): title_basics dataframe
+        title_akas (dataframe): title_akas dataframe
+        title_ratings (dataframe): title_ratings dataframe
+        title_crew (dataframe): title_crew dataframe
     Returns:
         None
     """
@@ -250,6 +255,15 @@ def business_questions_shvets(name_basics, title_basics, title_akas):
 
     analyze_title_length_for_each_lang_df = analyze_title_length_for_each_lang(title_akas)
     write_dataframe_to_csv(analyze_title_length_for_each_lang_df, 'data/results/question_24')
+
+    genres_with_highest_rating = get_genres_with_highest_rating(title_basics, title_ratings)
+    write_dataframe_to_csv(genres_with_highest_rating, 'data/results/question_29')
+
+    directors_action = directors_highest_rated_action_movies_thousand_votes_since_twenty_fifteen(title_basics,
+                                                                                                 title_ratings,
+                                                                                                 title_crew,
+                                                                                                 name_basics)
+    write_dataframe_to_csv(directors_action, 'data/results/question_30')
     return None
 
 
@@ -389,7 +403,7 @@ write_dataframe_to_csv(title_ratings_df_without_duplicates, title_ratings_write_
 
 # business_questions
 business_questions_shvets(name_basics_df_without_duplicates, title_basics_df_without_duplicates,
-                          title_akas_without_duplicates)
+                          title_akas_without_duplicates, title_ratings_df_without_duplicates, cleaned_title_crew)
 business_questions_tretiak(title_basics_df_without_duplicates, title_ratings_df_without_duplicates,
                            name_basics_df_without_duplicates, cleaned_title_principals_df)
 business_questions_rechkalova(name_basics_df_without_duplicates, title_akas_without_duplicates, cleaned_title_crew,

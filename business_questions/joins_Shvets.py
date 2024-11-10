@@ -34,7 +34,7 @@ def directors_highest_rated_action_movies_thousand_votes_since_twenty_fifteen(ti
         title_crew: The title_crew dataframe.
         name_basics: The name_basics dataframe.
     Returns:
-        action_directors: dataframe with 5 columns: primaryName, originalTitle, startYear, averageRating, numVotes
+        action_directors: dataframe with 5 columns: primary_name, original_title, start_year, average_rating, num_votes
     """
     genre = 'genre'
     director = 'director'
