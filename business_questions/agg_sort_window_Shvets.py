@@ -4,7 +4,7 @@ from pyspark.sql import Window
 from columns import primary_profession, id_person, genres, runtime_minutes, start_year, original_title, language, title
 
 
-def top_10_professions_by_number_of_people(name_basics):
+def top_ten_professions_by_number_of_people(name_basics):
     """
     11. Top 10 most popular professions by number of people
     Args:
@@ -62,7 +62,7 @@ def animated_fantasy_films_count_per_decade(title_basics):
     return animated_fantasy_decades
 
 
-def top_3_long_runtime_titles_per_decade(title_basics):
+def top_three_long_runtime_titles_per_decade(title_basics):
     """
     23. Top 3 titles with the longest runtime for each decade
     Args:
