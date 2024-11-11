@@ -15,7 +15,7 @@ def get_genres_with_highest_rating(title_basics, title_ratings):
     """
     genre = 'genre'
     avg_rating = 'avg_rating'
-    title_genre_ratings = (title_basics.join(title_ratings, tconst)
+    title_genre_ratings = (title_basics.join(title_ratings, tconst, how='right')
                            .withColumn(genre, f.explode(f.col(genres)))
                            .groupBy(genre)
                            .agg(f.avg(average_rating).alias(avg_rating))
@@ -44,7 +44,7 @@ def directors_highest_rated_action_movies_thousand_votes_since_twenty_fifteen(ti
     action_directors = (title_basics_filtered
                         .withColumn(genre, f.explode(f.col(genres)))
                         .filter((f.col(genre) == 'Action') & (f.col(title_type) == 'movie'))
-                        .join(title_ratings_filtered, tconst, how='left')
+                        .join(title_ratings_filtered, tconst)
                         .join(title_crew_filtered, tconst)
                         .select(tconst, original_title, start_year, num_votes, average_rating, directors)
                         .withColumn(director, f.explode(f.col(directors))))

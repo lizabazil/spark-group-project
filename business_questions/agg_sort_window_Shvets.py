@@ -78,7 +78,8 @@ def top_three_long_runtime_titles_per_decade(title_basics):
                                            (f.col(start_year) - (f.col(start_year) % 10)))
                                .withColumn(rank, f.row_number().over(decade_runtime_window))
                                .select(decade, original_title, runtime_minutes, rank)
-                               .filter((f.col(rank) <= 3)))
+                               .filter((f.col(rank) <= 3))
+                               .orderBy(decade, ascending=False))
     return top_long_runtime_titles
 
 
