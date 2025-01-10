@@ -1,3 +1,5 @@
+Presentation: https://www.canva.com/design/DAGWF-t-vv8/LKEUyM3c1taNCObop3gepg/view?utm_content=DAGWF-t-vv8&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h527d6af21d
+
 Team: Anna Rechkalova, Yelyzaveta Tretiak, Dmytro Shvets (group 4)
 
 IMDB dataset:
